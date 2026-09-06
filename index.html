@@ -1,40 +1,153 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PrimeFit ERP</title>
+function saveToPDF(){
 
-<style>
-* {
-    box-sizing: border-box;
-}
+    if(generatedMaterials.length === 0){
+        alert("Please generate materials first.");
+        return;
+    }
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f4f7f5;
-    color: #222;
-}
+    updateQuotation();
 
-header {
-    background: #087f3f;
-    color: white;
-    padding: 18px;
-    text-align: center;
-}
+    const quotation = document.getElementById("quotation");
 
-header h1 {
-    margin: 0;
-    font-size: 25px;
-}
+    const printWindow = window.open("", "_blank");
 
-header p {
-    margin: 6px 0 0;
-    font-size: 13px;
-}
+    if(!printWindow){
+        alert("Please allow pop-ups in your browser and try again.");
+        return;
+    }
 
-nav {
+    printWindow.document.open();
+
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport"
+                  content="width=device-width, initial-scale=1.0">
+
+            <title>Prime Fit Interiors Quotation</title>
+
+            <style>
+
+                body{
+                    font-family:Arial,sans-serif;
+                    margin:30px;
+                    color:#222;
+                }
+
+                h2{
+                    text-align:center;
+                    margin-bottom:5px;
+                }
+
+                h3{
+                    margin-top:20px;
+                }
+
+                .small{
+                    color:#555;
+                    font-size:13px;
+                }
+
+                .status{
+                    display:inline-block;
+                    padding:6px 10px;
+                    border-radius:15px;
+                    background:#e7f5ed;
+                    color:#123c2a;
+                    font-size:12px;
+                    font-weight:bold;
+                }
+
+                table{
+                    width:100%;
+                    border-collapse:collapse;
+                    margin-top:10px;
+                }
+
+                th,td{
+                    border:1px solid #ccc;
+                    padding:8px;
+                    font-size:12px;
+                    text-align:left;
+                }
+
+                th{
+                    background:#e7f0eb;
+                }
+
+                .material-name-cell{
+                    display:flex;
+                    align-items:center;
+                    gap:8px;
+                }
+
+                .quote-material-image{
+                    width:42px;
+                    height:42px;
+                }
+
+                .quote-material-image svg{
+                    width:40px;
+                    height:40px;
+                }
+
+                .total-box{
+                    margin-top:18px;
+                    border:1px solid #ccc;
+                    padding:14px;
+                }
+
+                .cost-row{
+                    display:flex;
+                    justify-content:space-between;
+                    padding:7px 0;
+                    border-bottom:1px solid #ddd;
+                }
+
+                .grand-total{
+                    display:flex;
+                    justify-content:space-between;
+                    margin-top:12px;
+                    padding-top:12px;
+                    border-top:2px solid #123c2a;
+                    font-size:20px;
+                    font-weight:bold;
+                }
+
+                .no-print{
+                    display:none !important;
+                }
+
+                @media print{
+                    body{
+                        margin:15mm;
+                    }
+                }
+
+            </style>
+        </head>
+
+        <body>
+
+            ${quotation.innerHTML}
+
+        </body>
+        </html>
+    `);
+
+    printWindow.document.close();
+
+    printWindow.focus();
+
+    setTimeout(function(){
+
+        printWindow.print();
+
+    },500);
+
+}nav {
     display: flex;
     background: #ffffff;
     border-bottom: 1px solid #ddd;
