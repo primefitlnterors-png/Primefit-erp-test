@@ -1,40 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PrimeFit ERP</title>
+function saveToPDF() {
+    if (generatedMaterials.length === 0) {
+        alert("Please generate materials first.");
+        return;
+    }
 
-<style>
-* {
-    box-sizing: border-box;
-}
+    updateQuotation();
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f3f5f4;
-    color: #222;
-}
+    const originalBody = document.body.innerHTML;
+    const quotation = document.getElementById("quotation");
 
-header {
-    background: #123c2a;
-    color: white;
-    text-align: center;
-    padding: 18px 12px;
-}
+    if (!quotation) {
+        alert("Quotation not found.");
+        return;
+    }
 
-header h1 {
-    margin: 0;
-    font-size: 25px;
-}
+    document.body.innerHTML = `
+        <div style="
+            max-width:900px;
+            margin:0 auto;
+            padding:20px;
+            font-family:Arial,sans-serif;
+            color:#222;
+        ">
+            ${quotation.outerHTML}
+        </div>
+    `;
 
-header p {
-    margin: 6px 0 0;
-    font-size: 13px;
-}
+    window.print();
 
-nav {
+    setTimeout(function() {
+        document.body.innerHTML = originalBody;
+        location.reload();
+    }, 1000);
+}nav {
     display: flex;
     overflow-x: auto;
     background: white;
