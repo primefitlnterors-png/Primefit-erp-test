@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrimeFit ERP Test</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #f2f5f3;
+    color: #222;
+}
+
+header {
+    background: #0b6b3a;
+    color: white;
+    padding: 18px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+header p {
+    margin: 5px 0 0;
+    font-size: 13px;
+}
+
+nav {
+    display: flex;
+    background: white;
+    border-bottom: 1px solid #ddd;
+}
+
+nav button {
+    flex: 1;
+    padding: 14px 5px;
+    border: none;
+    background: white;
+    font-weight: bold;
+    color: #0b6b3a;
+}
+
+.container {
+    padding: 15px;
+    max-width: 700px;
+    margin: auto;
+}
+
+.card {
+    background: white;
+    padding: 18px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+h2 {
+    margin-top: 0;
+    color: #0b6b3a;
+    font-size: 19px;
+}
+
+label {
+    display: block;
+    margin-top: 12px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    font-size: 15px;
+}
+
+button.action {
+    width: 100%;
+    padding: 13px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 7px;
+    background: #0b6b3a;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+button.secondary {
+    background: #444;
+}
+
+.result {
+    background: #eef8f1;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 12px;
+}
+
+.total {
+    font-size: 22px;
+    font-weight: bold;
+    color: #0b6b3a;
+}
+
+.hidden {
+    display: none;
+}
+
+.success {
+    color: #0b6b3a;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+@media print {
+    nav,
+    button,
+    .no-print {
+        display: none !important;
+    }
+
+    body {
+        background: white;
+    }
+
+    .card {
+        box-shadow: none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>PrimeFit ERP</h1>
+    <p>Smart Quotation. Accurate Pricing. Better Business.</p>
+</header>
+
+<nav>
+    <button onclick="showSection('dashboard')">Dashboard</button>
+    <button onclick="showSection('customer')">Customer</button>
+    <button onclick="showSection('quotation')">Quotation</button>
+</nav>
+
+<div class="container">
+
+<section id="dashboard" class="card">
+    <h2>Dashboard</h2>
+
+    <p><strong>Welcome to PrimeFit ERP Test</strong></p>
+
+    <div class="result">
+        <p>✓ Customer management</p>
+        <p>✓ Measurement-based quotation</p>
+        <p>✓ Material calculation</p>
+        <p>✓ Cost calculation</p>
+        <p>✓ Quotation preview</p>
+        <p>✓ Save quotation</p>
+        <p>✓ Print / Save as PDF</p>
+    </div>
+</section>
+
+<section id="customer" class="card hidden">
+    <h2>Customer</h2>
+
+    <label>Customer Name</label>
+    <input type="text" id="customerName" placeholder="Enter customer name">
+
+    <label>Phone</label>
+    <input type="tel" id="customerPhone" placeholder="Enter phone number">
+
+    <label>Email</label>
+    <input type="email" id="customerEmail" placeholder="Enter email">
+
+    <button class="action" onclick="saveCustomer()">
+        Save Customer
+    </button>
+
+    <div id="customerMessage" class="success"></div>
+</section>
+
+<section id="quotation" class="hidden">
+
+<div class="card">
+    <h2>New Quotation</h2>
+
+    <label>Job Type</label>
+    <select id="jobType">
+        <option value="Wardrobe">Wardrobe</option>
+        <option value="Kitchen">Kitchen</option>
+        <option value="Furniture">Furniture</option>
+        <option value="Gypsum">Gypsum</option>
+        <option value="Painting">Painting</option>
+        <option value="Aluminium">Aluminium</option>
+        <option value="Repair / Installation">Repair / Installation</option>
+        <option value="Custom">Custom</option>
+    </select>
+</div>
+
+<div class="card">
+    <h2>Wardrobe Measurements</h2>
+
+    <label>Width (mm)</label>
+    <input type="number" id="width" value="2400">
+
+    <label>Height (mm)</label>
+    <input type="number" id="height" value="2100">
+
+    <label>Depth (mm)</label>
+    <input type="number" id="depth" value="600">
+
+    <label>Number of Doors</label>
+    <input type="number" id="doors" value="4">
+
+    <label>Number of Drawers</label>
+    <input type="number" id="drawers" value="3">
+
+    <button class="action" onclick="calculateMaterials()">
+        Calculate Materials
+    </button>
+
+    <div id="materialResult" class="result hidden"></div>
+</div>
+
+<div class="card">
+    <h2>Quotation Costs</h2>
+
+    <label>Materials (KSh)</label>
+    <input type="number" id="materialsCost" value="35000">
+
+    <label>Labour (KSh)</label>
+    <input type="number" id="labourCost" value="12000">
+
+    <label>Transport (KSh)</label>
+    <input type="number" id="transportCost" value="2000">
+
+    <label>Other Costs (KSh)</label>
+    <input type="number" id="otherCost" value="1000">
+
+    <label>Discount (KSh)</label>
+    <input type="number" id="discount" value="0">
+
+    <button class="action" onclick="generateQuotation()">
+        Generate Quotation
+    </button>
+</div>
+
+<div id="quotationPreview" class="card hidden">
+    <h2>Quotation Preview</h2>
+
+    <p><strong>Prime Fit Interiors</strong></p>
+
+    <p>
+        <strong>Customer:</strong>
+        <span id="previewCustomer"></span>
+    </p>
+
+    <p>
+        <strong>Job:</strong>
+        <span id="previewJob"></span>
+    </p>
+
+    <hr>
+
+    <p>Materials: KSh <span id="previewMaterials"></span></p>
+    <p>Labour: KSh <span id="previewLabour"></span></p>
+    <p>Transport: KSh <span id="previewTransport"></span></p>
+    <p>Other: KSh <span id="previewOther"></span></p>
+    <p>Discount: KSh <span id="previewDiscount"></span></p>
+
+    <hr>
+
+    <p class="total">
+        TOTAL: KSh <span id="previewTotal"></span>
+    </p>
+
+    <p><strong>Quotation Status:</strong> Valid</p>
+
+    <button class="action" onclick="saveQuotation()">
+        Save Quotation
+    </button>
+
+    <button class="action secondary" onclick="window.print()">
+        Print / Save PDF
+    </button>
+
+    <div id="quotationMessage" class="success"></div>
+</div>
+
+</section>
+</div>
+
+<script>
+
+function showSection(section) {
+    document.getElementById("dashboard").classList.add("hidden");
+    document.getElementById("customer").classList.add("hidden");
+    document.getElementById("quotation").classList.add("hidden");
+
+    document.getElementById(section).classList.remove("hidden");
+}
+
+function saveCustomer() {
+
+    const customer = {
+        name: document.getElementById("customerName").value,
+        phone: document.getElementById("customerPhone").value,
+        email: document.getElementById("customerEmail").value
+    };
+
+    localStorage.setItem(
+        "primefit_customer",
+        JSON.stringify(customer)
+    );
+
+    document.getElementById("customerMessage").innerText =
+        "Customer saved successfully.";
+}
+
+function calculateMaterials() {
+
+    const width = Number(document.getElementById("width").value);
+    const height = Number(document.getElementById("height").value);
+    const doors = Number(document.getElementById("doors").value);
+    const drawers = Number(document.getElementById("drawers").value);
+
+    const area = (width / 1000) * (height / 1000);
+
+    const sheets = Math.max(1, Math.ceil(area * 2.5));
+
+    const edge = Math.ceil(
+        ((width * 2) + (height * doors)) / 1000
+    );
+
+    const hinges = doors * 3;
+    const handles = doors + drawers;
+    const runners = drawers;
+
+    const result = document.getElementById("materialResult");
+
+    result.classList.remove("hidden");
+
+    result.innerHTML = `
+        <strong>Calculated Materials</strong>
+
+        <p>MDF 18mm: ${sheets} sheets</p>
+        <p>Edge Banding: ${edge} metres</p>
+        <p>Hinges: ${hinges} pieces</p>
+        <p>Handles: ${handles} pieces</p>
+        <p>Drawer Runners: ${runners} pairs</p>
+        <p>Screws: 1 box</p>
+        <p>Wood Glue: 2 litres</p>
+    `;
+}
+
+function generateQuotation() {
+
+    const customer = JSON.parse(
+        localStorage.getItem("primefit_customer") || "{}"
+    );
+
+    const job = document.getElementById("jobType").value;
+
+    const materials =
+        Number(document.getElementById("materialsCost").value) || 0;
+
+    const labour =
+        Number(document.getElementById("labourCost").value) || 0;
+
+    const transport =
+        Number(document.getElementById("transportCost").value) || 0;
+
+    const other =
+        Number(document.getElementById("otherCost").value) || 0;
+
+    const discount =
+        Number(document.getElementById("discount").value) || 0;
+
+    const total =
+        materials + labour + transport + other - discount;
+
+    document.getElementById("previewCustomer").innerText =
+        customer.name || "No customer saved";
+
+    document.getElementById("previewJob").innerText = job;
+
+    document.getElementById("previewMaterials").innerText =
+        materials.toLocaleString();
+
+    document.getElementById("previewLabour").innerText =
+        labour.toLocaleString();
+
+    document.getElementById("previewTransport").innerText =
+        transport.toLocaleString();
+
+    document.getElementById("previewOther").innerText =
+        other.toLocaleString();
+
+    document.getElementById("previewDiscount").innerText =
+        discount.toLocaleString();
+
+    document.getElementById("previewTotal").innerText =
+        total.toLocaleString();
+
+    document.getElementById("quotationPreview")
+        .classList.remove("hidden");
+}
+
+function saveQuotation() {
+
+    const quotation = {
+
+        customer: JSON.parse(
+            localStorage.getItem("primefit_customer") || "{}"
+        ),
+
+        job: document.getElementById("jobType").value,
+
+        materials:
+            Number(document.getElementById("materialsCost").value),
+
+        labour:
+            Number(document.getElementById("labourCost").value),
+
+        transport:
+            Number(document.getElementById("transportCost").value),
+
+        other:
+            Number(document.getElementById("otherCost").value),
+
+        discount:
+            Number(document.getElementById("discount").value),
+
+        date: new Date().toISOString()
+    };
+
+    localStorage.setItem(
+        "primefit_quotation",
+        JSON.stringify(quotation)
+    );
+
+    document.getElementById("quotationMessage").innerText =
+        "Quotation saved successfully on this device.";
+}
+
+</script>
+
+</body>
+</html>
