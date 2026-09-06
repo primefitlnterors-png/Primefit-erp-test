@@ -1,4 +1,651 @@
-function saveToPDF() {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Prime Fit PDF Test</title>
+
+<!-- PDF LIBRARY -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #eeeeee;
+        color: #222;
+    }
+
+    .header {
+        background: #123c2a;
+        color: white;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .header h1 {
+        margin: 0;
+    }
+
+    .container {
+        max-width: 850px;
+        margin: 20px auto;
+        padding: 20px;
+    }
+
+    .quotation {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+    }
+
+    .company {
+        text-align: center;
+        border-bottom: 2px solid #123c2a;
+        padding-bottom: 15px;
+    }
+
+    .company h2 {
+        color: #123c2a;
+        margin-bottom: 5px;
+    }
+
+    .details {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .box {
+        flex: 1;
+        border: 1px solid #ccc;
+        padding: 12px;
+    }
+
+    .box h3 {
+        margin-top: 0;
+        color: #123c2a;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th,
+    td {
+        border: 1px solid #ccc;
+        padding: 9px;
+        text-align: left;
+    }
+
+    th {
+        background: #e7f0eb;
+    }
+
+    .summary {
+        max-width: 400px;
+        margin-left: auto;
+        margin-top: 20px;
+    }
+
+    .row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .grand {
+        display: flex;
+        justify-content: space-between;
+        padding: 14px 8px;
+        margin-top: 5px;
+        border-top: 2px solid #123c2a;
+        font-size: 20px;
+        font-weight: bold;
+        color: #123c2a;
+    }
+
+    .button-area {
+        text-align: center;
+        margin: 20px 0;
+    }
+
+    button {
+        background: #123c2a;
+        color: white;
+        border: none;
+        padding: 15px 25px;
+        border-radius: 8px;
+        font-size: 17px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    button:active {
+        transform: scale(0.98);
+    }
+
+    #message {
+        text-align: center;
+        margin-top: 15px;
+        font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+
+        .container {
+            padding: 10px;
+        }
+
+        .quotation {
+            padding: 15px;
+        }
+
+        .details {
+            flex-direction: column;
+        }
+
+        table {
+            font-size: 12px;
+        }
+
+        th,
+        td {
+            padding: 6px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>Prime Fit Interiors</h1>
+    <p>PDF Generator Test</p>
+</div>
+
+<div class="container">
+
+    <div class="button-area">
+
+        <button onclick="generatePDF()">
+            SAVE QUOTATION AS PDF
+        </button>
+
+        <div id="message"></div>
+
+    </div>
+
+
+    <div id="quotation" class="quotation">
+
+        <div class="company">
+
+            <h2>PRIME FIT INTERIORS</h2>
+
+            <p>Interior Design & Construction</p>
+
+            <p><strong>QUOTATION</strong></p>
+
+        </div>
+
+
+        <div class="details">
+
+            <div class="box">
+
+                <h3>Customer</h3>
+
+                <p><strong>Name:</strong> John Mwangi</p>
+
+                <p><strong>Phone:</strong> 0712 345 678</p>
+
+                <p><strong>Project:</strong> Bedroom Wardrobe</p>
+
+            </div>
+
+
+            <div class="box">
+
+                <h3>Quotation Details</h3>
+
+                <p><strong>Quotation No:</strong> PF-Q-0001</p>
+
+                <p><strong>Date:</strong> 6 September 2026</p>
+
+                <p><strong>Valid Until:</strong> 13 September 2026</p>
+
+            </div>
+
+        </div>
+
+
+        <h3>Materials</h3>
+
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>#</th>
+
+                    <th>Material</th>
+
+                    <th>Finish</th>
+
+                    <th>Qty</th>
+
+                    <th>Unit Price</th>
+
+                    <th>Total</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                <tr>
+
+                    <td>1</td>
+
+                    <td>18mm MDF Board</td>
+
+                    <td>White</td>
+
+                    <td>6 Sheets</td>
+
+                    <td>KSh 4,500</td>
+
+                    <td>KSh 27,000</td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>2</td>
+
+                    <td>Edge Banding</td>
+
+                    <td>White</td>
+
+                    <td>60 m</td>
+
+                    <td>KSh 50</td>
+
+                    <td>KSh 3,000</td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>3</td>
+
+                    <td>Hinges</td>
+
+                    <td>Silver</td>
+
+                    <td>24 pcs</td>
+
+                    <td>KSh 120</td>
+
+                    <td>KSh 2,880</td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>4</td>
+
+                    <td>Handles</td>
+
+                    <td>Black</td>
+
+                    <td>12 pcs</td>
+
+                    <td>KSh 180</td>
+
+                    <td>KSh 2,160</td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+
+        <div class="summary">
+
+            <div class="row">
+
+                <span>Materials</span>
+
+                <strong>KSh 35,040</strong>
+
+            </div>
+
+
+            <div class="row">
+
+                <span>Labour</span>
+
+                <strong>KSh 12,000</strong>
+
+            </div>
+
+
+            <div class="row">
+
+                <span>Transport</span>
+
+                <strong>KSh 2,000</strong>
+
+            </div>
+
+
+            <div class="row">
+
+                <span>Other Costs</span>
+
+                <strong>KSh 1,000</strong>
+
+            </div>
+
+
+            <div class="row">
+
+                <span>Discount</span>
+
+                <strong>KSh 0</strong>
+
+            </div>
+
+
+            <div class="grand">
+
+                <span>GRAND TOTAL</span>
+
+                <span>KSh 50,040</span>
+
+            </div>
+
+        </div>
+
+
+        <div style="margin-top:30px;">
+
+            <h3>Terms & Conditions</h3>
+
+            <p>
+                This quotation is valid until the date shown above.
+                Prices may change after the quotation expires.
+            </p>
+
+            <p>
+                Work will begin after quotation approval and the agreed
+                payment arrangement.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+async function generatePDF() {
+
+    const message = document.getElementById("message");
+
+    message.textContent = "Creating PDF...";
+
+    try {
+
+        if (!window.jspdf) {
+
+            throw new Error("PDF library did not load.");
+
+        }
+
+        const { jsPDF } = window.jspdf;
+
+        const pdf = new jsPDF("p", "mm", "a4");
+
+
+        pdf.setFont("helvetica", "bold");
+
+        pdf.setFontSize(20);
+
+        pdf.text("PRIME FIT INTERIORS", 105, 20, {
+            align: "center"
+        });
+
+
+        pdf.setFont("helvetica", "normal");
+
+        pdf.setFontSize(10);
+
+        pdf.text("Interior Design & Construction", 105, 27, {
+            align: "center"
+        });
+
+
+        pdf.setFontSize(16);
+
+        pdf.setFont("helvetica", "bold");
+
+        pdf.text("QUOTATION", 105, 38, {
+            align: "center"
+        });
+
+
+        pdf.setFont("helvetica", "normal");
+
+        pdf.setFontSize(10);
+
+
+        pdf.text("Customer: John Mwangi", 15, 52);
+
+        pdf.text("Phone: 0712 345 678", 15, 59);
+
+        pdf.text("Project: Bedroom Wardrobe", 15, 66);
+
+
+        pdf.text("Quotation No: PF-Q-0001", 120, 52);
+
+        pdf.text("Date: 6 September 2026", 120, 59);
+
+        pdf.text("Valid Until: 13 September 2026", 120, 66);
+
+
+        pdf.setFont("helvetica", "bold");
+
+        pdf.text("Materials", 15, 82);
+
+
+        let y = 90;
+
+
+        pdf.setFillColor(231, 240, 235);
+
+        pdf.rect(15, y - 6, 180, 8, "F");
+
+
+        pdf.setFontSize(8);
+
+        pdf.text("#", 18, y);
+
+        pdf.text("Material", 28, y);
+
+        pdf.text("Finish", 75, y);
+
+        pdf.text("Qty", 105, y);
+
+        pdf.text("Unit Price", 125, y);
+
+        pdf.text("Total", 160, y);
+
+
+        y += 8;
+
+
+        const materials = [
+
+            ["1", "18mm MDF Board", "White", "6 Sheets", "KSh 4,500", "KSh 27,000"],
+
+            ["2", "Edge Banding", "White", "60 m", "KSh 50", "KSh 3,000"],
+
+            ["3", "Hinges", "Silver", "24 pcs", "KSh 120", "KSh 2,880"],
+
+            ["4", "Handles", "Black", "12 pcs", "KSh 180", "KSh 2,160"]
+
+        ];
+
+
+        pdf.setFont("helvetica", "normal");
+
+
+        materials.forEach(function(item) {
+
+            pdf.text(item[0], 18, y);
+
+            pdf.text(item[1], 28, y);
+
+            pdf.text(item[2], 75, y);
+
+            pdf.text(item[3], 105, y);
+
+            pdf.text(item[4], 125, y);
+
+            pdf.text(item[5], 160, y);
+
+            y += 9;
+
+        });
+
+
+        y += 8;
+
+
+        pdf.setFont("helvetica", "bold");
+
+        pdf.setFontSize(10);
+
+        pdf.text("COST SUMMARY", 130, y);
+
+
+        y += 9;
+
+
+        pdf.setFont("helvetica", "normal");
+
+        pdf.text("Materials", 130, y);
+
+        pdf.text("KSh 35,040", 175, y);
+
+
+        y += 8;
+
+        pdf.text("Labour", 130, y);
+
+        pdf.text("KSh 12,000", 175, y);
+
+
+        y += 8;
+
+        pdf.text("Transport", 130, y);
+
+        pdf.text("KSh 2,000", 175, y);
+
+
+        y += 8;
+
+        pdf.text("Other Costs", 130, y);
+
+        pdf.text("KSh 1,000", 175, y);
+
+
+        y += 8;
+
+        pdf.text("Discount", 130, y);
+
+        pdf.text("KSh 0", 175, y);
+
+
+        y += 10;
+
+
+        pdf.setFont("helvetica", "bold");
+
+        pdf.setFontSize(13);
+
+        pdf.text("GRAND TOTAL", 125, y);
+
+        pdf.text("KSh 50,040", 170, y);
+
+
+        y += 20;
+
+
+        pdf.setFontSize(10);
+
+        pdf.text("Terms & Conditions", 15, y);
+
+
+        y += 8;
+
+
+        pdf.setFont("helvetica", "normal");
+
+        pdf.setFontSize(9);
+
+
+        const terms = pdf.splitTextToSize(
+            "This quotation is valid until the date shown above. Prices may change after the quotation expires. Work will begin after quotation approval and the agreed payment arrangement.",
+            175
+        );
+
+
+        pdf.text(terms, 15, y);
+
+
+        pdf.save("PrimeFit_Quotation_Test.pdf");
+
+
+        message.textContent =
+            "PDF created successfully. Check your Downloads folder.";
+
+    } catch (error) {
+
+        console.error(error);
+
+        message.textContent =
+            "PDF could not be created: " + error.message;
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>function saveToPDF() {
     if (generatedMaterials.length === 0) {
         alert("Please generate materials first.");
         return;
