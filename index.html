@@ -7,6 +7,439 @@
 
 <style>
 * {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f7f5;
+    color: #222;
+}
+
+header {
+    background: #087f3f;
+    color: white;
+    padding: 18px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 25px;
+}
+
+header p {
+    margin: 6px 0 0;
+    font-size: 13px;
+}
+
+nav {
+    display: flex;
+    background: #ffffff;
+    border-bottom: 1px solid #ddd;
+}
+
+nav button {
+    flex: 1;
+    border: none;
+    background: white;
+    padding: 14px 5px;
+    font-weight: bold;
+    color: #087f3f;
+    cursor: pointer;
+}
+
+nav button:active {
+    background: #e5f5eb;
+}
+
+.container {
+    padding: 15px;
+    max-width: 700px;
+    margin: auto;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.card {
+    background: white;
+    padding: 18px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.card h2 {
+    margin-top: 0;
+    color: #087f3f;
+}
+
+.feature {
+    padding: 12px;
+    margin: 8px 0;
+    background: #f0f8f3;
+    border-left: 4px solid #087f3f;
+    border-radius: 5px;
+}
+
+label {
+    display: block;
+    margin-top: 12px;
+    font-weight: bold;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 11px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+button.primary {
+    width: 100%;
+    margin-top: 15px;
+    padding: 13px;
+    border: none;
+    border-radius: 7px;
+    background: #087f3f;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button.secondary {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    border: 1px solid #087f3f;
+    border-radius: 7px;
+    background: white;
+    color: #087f3f;
+    font-weight: bold;
+}
+
+.result {
+    margin-top: 15px;
+    padding: 15px;
+    background: #eef8f1;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    color: #777;
+    font-size: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>PrimeFit ERP</h1>
+    <p>Smart Quotation. Accurate Pricing. Better Business.</p>
+</header>
+
+<nav>
+    <button type="button" onclick="showPage('dashboard')">Dashboard</button>
+    <button type="button" onclick="showPage('customers')">Customers</button>
+    <button type="button" onclick="showPage('quotation')">Quotation</button>
+</nav>
+
+<div class="container">
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="page active">
+
+        <div class="card">
+            <h2>Welcome to PrimeFit ERP</h2>
+            <p>Manage your quotations, customers and projects from one place.</p>
+        </div>
+
+        <div class="card">
+            <h2>Features</h2>
+
+            <div class="feature">
+                🧮 Measurement-based quotation calculations
+            </div>
+
+            <div class="feature">
+                📋 Professional quotations
+            </div>
+
+            <div class="feature">
+                👥 Customer management
+            </div>
+
+            <div class="feature">
+                📄 Print and save quotations
+            </div>
+
+            <div class="feature">
+                💾 Offline-ready business data
+            </div>
+
+            <div class="feature">
+                🔐 Secure business information
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- CUSTOMERS -->
+    <section id="customers" class="page">
+
+        <div class="card">
+            <h2>Customers</h2>
+
+            <label>Customer Name</label>
+            <input id="customerName" type="text" placeholder="Enter customer name">
+
+            <label>Phone</label>
+            <input id="customerPhone" type="tel" placeholder="Enter phone number">
+
+            <label>Email</label>
+            <input id="customerEmail" type="email" placeholder="Enter email">
+
+            <label>KRA PIN</label>
+            <input id="customerKra" type="text" placeholder="Optional">
+
+            <button type="button" class="primary" onclick="saveCustomer()">
+                Save Customer
+            </button>
+
+            <div id="customerResult"></div>
+        </div>
+
+    </section>
+
+
+    <!-- QUOTATION -->
+    <section id="quotation" class="page">
+
+        <div class="card">
+
+            <h2>New Quotation</h2>
+
+            <label>Customer Name</label>
+            <input id="quoteCustomer" type="text" placeholder="Customer name">
+
+            <label>Job Type</label>
+            <select id="jobType">
+                <option value="">Select job</option>
+                <option value="Wardrobe">Wardrobe</option>
+                <option value="Kitchen">Kitchen</option>
+                <option value="Furniture">Furniture</option>
+                <option value="Gypsum">Gypsum</option>
+                <option value="Painting">Painting</option>
+                <option value="Aluminium">Aluminium</option>
+                <option value="Repair / Installation">Repair / Installation</option>
+                <option value="Custom">Custom</option>
+            </select>
+
+            <h3>Wardrobe Measurements</h3>
+
+            <label>Width (mm)</label>
+            <input id="width" type="number" placeholder="2400">
+
+            <label>Height (mm)</label>
+            <input id="height" type="number" placeholder="2100">
+
+            <label>Depth (mm)</label>
+            <input id="depth" type="number" placeholder="600">
+
+            <label>Number of Doors</label>
+            <input id="doors" type="number" placeholder="4">
+
+            <label>Number of Drawers</label>
+            <input id="drawers" type="number" placeholder="3">
+
+            <label>Material</label>
+            <select id="material">
+                <option>18mm MDF</option>
+                <option>18mm Plywood</option>
+                <option>Timber</option>
+                <option>Other</option>
+            </select>
+
+            <label>Finish</label>
+            <select id="finish">
+                <option>Melamine</option>
+                <option>Paint</option>
+                <option>Veneer</option>
+                <option>Other</option>
+            </select>
+
+            <h3>Costs</h3>
+
+            <label>Materials (KSh)</label>
+            <input id="materialsCost" type="number" value="35000">
+
+            <label>Labour (KSh)</label>
+            <input id="labourCost" type="number" value="12000">
+
+            <label>Transport (KSh)</label>
+            <input id="transportCost" type="number" value="2000">
+
+            <label>Other Costs (KSh)</label>
+            <input id="otherCost" type="number" value="1000">
+
+            <label>Discount (KSh)</label>
+            <input id="discount" type="number" value="0">
+
+            <button type="button" class="primary" onclick="calculateQuotation()">
+                Calculate Quotation
+            </button>
+
+            <div id="quotationResult"></div>
+
+            <button type="button" class="secondary" onclick="printQuotation()">
+                Print / Save PDF
+            </button>
+
+        </div>
+
+    </section>
+
+</div>
+
+<footer>
+    PrimeFit ERP — Version 1.0
+</footer>
+
+
+<script>
+
+function showPage(pageName) {
+
+    var pages = document.querySelectorAll(".page");
+
+    for (var i = 0; i < pages.length; i++) {
+        pages[i].classList.remove("active");
+    }
+
+    var selectedPage = document.getElementById(pageName);
+
+    if (selectedPage) {
+        selectedPage.classList.add("active");
+        window.scrollTo(0, 0);
+    }
+}
+
+
+function saveCustomer() {
+
+    var name = document.getElementById("customerName").value.trim();
+    var phone = document.getElementById("customerPhone").value.trim();
+    var email = document.getElementById("customerEmail").value.trim();
+    var kra = document.getElementById("customerKra").value.trim();
+
+    if (!name) {
+        alert("Please enter the customer name.");
+        return;
+    }
+
+    var customer = {
+        name: name,
+        phone: phone,
+        email: email,
+        kra: kra
+    };
+
+    localStorage.setItem("primefitCustomer", JSON.stringify(customer));
+
+    document.getElementById("customerResult").innerHTML =
+        '<div class="result">Customer saved successfully: ' +
+        name +
+        '</div>';
+}
+
+
+function calculateQuotation() {
+
+    var width = Number(document.getElementById("width").value) || 0;
+    var height = Number(document.getElementById("height").value) || 0;
+    var depth = Number(document.getElementById("depth").value) || 0;
+
+    var doors = Number(document.getElementById("doors").value) || 0;
+    var drawers = Number(document.getElementById("drawers").value) || 0;
+
+    var materials = Number(document.getElementById("materialsCost").value) || 0;
+    var labour = Number(document.getElementById("labourCost").value) || 0;
+    var transport = Number(document.getElementById("transportCost").value) || 0;
+    var other = Number(document.getElementById("otherCost").value) || 0;
+    var discount = Number(document.getElementById("discount").value) || 0;
+
+    if (width <= 0 || height <= 0 || depth <= 0) {
+        alert("Please enter the wardrobe measurements.");
+        return;
+    }
+
+    var total = materials + labour + transport + other - discount;
+
+    if (total < 0) {
+        total = 0;
+    }
+
+    var result =
+        '<div class="result">' +
+        '<h3>Quotation Summary</h3>' +
+        'Width: ' + width + ' mm<br>' +
+        'Height: ' + height + ' mm<br>' +
+        'Depth: ' + depth + ' mm<br>' +
+        'Doors: ' + doors + '<br>' +
+        'Drawers: ' + drawers + '<br><br>' +
+
+        'Materials: KSh ' + materials.toLocaleString() + '<br>' +
+        'Labour: KSh ' + labour.toLocaleString() + '<br>' +
+        'Transport: KSh ' + transport.toLocaleString() + '<br>' +
+        'Other: KSh ' + other.toLocaleString() + '<br>' +
+        'Discount: KSh ' + discount.toLocaleString() + '<br><br>' +
+
+        '<strong>TOTAL: KSh ' +
+        total.toLocaleString() +
+        '</strong>' +
+
+        '</div>';
+
+    document.getElementById("quotationResult").innerHTML = result;
+
+    localStorage.setItem("primefitQuotationTotal", total);
+}
+
+
+function printQuotation() {
+
+    window.print();
+
+}
+
+</script>
+
+</body>
+</html> html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrimeFit ERP</title>
+
+<style>
+* {
   box-sizing: border-box;
   font-family: Arial, sans-serif;
 }
