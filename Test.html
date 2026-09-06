@@ -1,0 +1,2039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrimeFit ERP</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f3f5f4;
+    color: #222;
+}
+
+header {
+    background: #123c2a;
+    color: white;
+    text-align: center;
+    padding: 18px 12px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 25px;
+}
+
+header p {
+    margin: 6px 0 0;
+    font-size: 13px;
+}
+
+nav {
+    display: flex;
+    overflow-x: auto;
+    background: white;
+    border-bottom: 1px solid #ddd;
+}
+
+nav button {
+    flex: 1;
+    min-width: 100px;
+    padding: 14px 8px;
+    border: 0;
+    background: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+nav button:active {
+    background: #dfeee7;
+}
+
+.page {
+    display: none;
+    max-width: 900px;
+    margin: auto;
+    padding: 15px;
+}
+
+.page.active {
+    display: block;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+h2,
+h3 {
+    color: #123c2a;
+}
+
+h2 {
+    margin-top: 0;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    margin: 6px 0 12px;
+}
+
+.main-btn {
+    width: 100%;
+    padding: 14px;
+    border: 0;
+    border-radius: 8px;
+    background: #123c2a;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 6px;
+    cursor: pointer;
+}
+
+.message {
+    display: none;
+    background: #e7f5ed;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.material-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.material-card {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 12px;
+    background: white;
+}
+
+.material-card h3 {
+    font-size: 15px;
+    margin: 6px 0;
+}
+
+.material-card p {
+    font-size: 13px;
+    margin: 5px 0;
+}
+
+.material-picture {
+    width: 75px;
+    height: 75px;
+    border-radius: 12px;
+    background: #f1f3f2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.material-picture svg {
+    width: 62px;
+    height: 62px;
+}
+
+.finish {
+    font-weight: bold;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th,
+td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    font-size: 12px;
+    text-align: left;
+}
+
+th {
+    background: #e7f0eb;
+}
+
+.total-box {
+    margin-top: 18px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 14px;
+    background: #f8faf9;
+}
+
+.cost-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 7px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.grand-total {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 2px solid #123c2a;
+    font-size: 20px;
+    font-weight: bold;
+    color: #123c2a;
+}
+
+.quote-header {
+    text-align: center;
+}
+
+.quote-header h2 {
+    margin-bottom: 4px;
+}
+
+.small {
+    color: #666;
+    font-size: 13px;
+}
+
+.empty {
+    color: #777;
+    text-align: center;
+    padding: 20px;
+}
+
+.status {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 15px;
+    background: #e7f5ed;
+    color: #123c2a;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+@media (max-width: 600px) {
+    .material-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    table {
+        font-size: 11px;
+    }
+
+    th,
+    td {
+        padding: 6px;
+    }
+}
+
+/* PRINT */
+@media print {
+
+    body {
+        background: white;
+        color: black;
+    }
+
+    header,
+    nav,
+    .no-print {
+        display: none !important;
+    }
+
+    .page {
+        display: none !important;
+        padding: 0;
+        margin: 0;
+        max-width: none;
+    }
+
+    #quotation {
+        display: block !important;
+    }
+
+    .card {
+        box-shadow: none;
+        border: 0;
+        padding: 0;
+    }
+
+    .quote-header h2,
+    h3 {
+        color: black;
+    }
+
+    table {
+        page-break-inside: auto;
+    }
+
+    tr {
+        page-break-inside: avoid;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>PrimeFit ERP</h1>
+    <p>Smart Quotation. Accurate Pricing. Better Business.</p>
+</header>
+
+<nav>
+    <button onclick="showPage('dashboard')">Dashboard</button>
+    <button onclick="showPage('customers')">Customers</button>
+    <button onclick="showPage('measurement')">Measurements</button>
+    <button onclick="showPage('materials')">Materials</button>
+    <button onclick="showPage('quotation')">Quotation</button>
+</nav>
+
+
+<!-- DASHBOARD -->
+
+<section id="dashboard" class="page active">
+
+    <div class="card">
+        <h2>PrimeFit ERP Test</h2>
+
+        <p>
+            This is the current complete quotation test.
+        </p>
+
+        <p>✓ Customers</p>
+        <p>✓ Measurements</p>
+        <p>✓ Material generator</p>
+        <p>✓ Material pictures</p>
+        <p>✓ Material finishes</p>
+        <p>✓ Material prices</p>
+        <p>✓ Labour</p>
+        <p>✓ Transport</p>
+        <p>✓ Other costs</p>
+        <p>✓ Discount</p>
+        <p>✓ Grand total</p>
+        <p>✓ Quotation print / PDF</p>
+    </div>
+
+</section>
+
+
+<!-- CUSTOMERS -->
+
+<section id="customers" class="page">
+
+    <div class="card">
+
+        <h2>Customer Details</h2>
+
+        <label>Customer Name</label>
+        <input
+            id="customerName"
+            type="text"
+            placeholder="Enter customer name"
+        >
+
+        <label>Phone</label>
+        <input
+            id="customerPhone"
+            type="tel"
+            placeholder="Enter phone number"
+        >
+
+        <label>Email</label>
+        <input
+            id="customerEmail"
+            type="email"
+            placeholder="Enter email"
+        >
+
+        <label>Address</label>
+        <input
+            id="customerAddress"
+            type="text"
+            placeholder="Enter address"
+        >
+
+        <button class="main-btn" onclick="saveCustomer()">
+            SAVE CUSTOMER
+        </button>
+
+        <div id="customerMessage" class="message"></div>
+
+    </div>
+
+    <div class="card">
+
+        <h2>Saved Customer</h2>
+
+        <div id="customerDisplay" class="empty">
+            No customer saved yet.
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- MEASUREMENTS -->
+
+<section id="measurement" class="page">
+
+    <div class="card">
+
+        <h2>Wardrobe Measurements</h2>
+
+        <label>Width (mm)</label>
+        <input id="width" type="number" value="2400">
+
+        <label>Height (mm)</label>
+        <input id="height" type="number" value="2100">
+
+        <label>Depth (mm)</label>
+        <input id="depth" type="number" value="600">
+
+        <label>Number of Doors</label>
+        <input id="doors" type="number" value="4">
+
+        <label>Number of Drawers</label>
+        <input id="drawers" type="number" value="3">
+
+        <label>Board Material</label>
+
+        <select id="boardMaterial">
+            <option value="MDF">18mm MDF</option>
+            <option value="Plywood">Plywood</option>
+            <option value="Timber">Timber</option>
+        </select>
+
+        <label>Board Finish</label>
+
+        <select id="boardFinish">
+            <option>White</option>
+            <option>Black</option>
+            <option>Grey</option>
+            <option>Cream</option>
+            <option>Mahogany</option>
+            <option>Pine</option>
+            <option>Oak</option>
+            <option>Walnut</option>
+            <option>Natural</option>
+        </select>
+
+        <button class="main-btn" onclick="generateMaterials()">
+            GENERATE MATERIALS
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- MATERIALS -->
+
+<section id="materials" class="page">
+
+    <div class="card">
+
+        <h2>Generated Materials</h2>
+
+        <div id="materialList" class="material-grid">
+
+            <div class="empty">
+                Generate materials first.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>Additional Costs</h2>
+
+        <label>Labour (KSh)</label>
+        <input id="labour" type="number" value="12000">
+
+        <label>Transport (KSh)</label>
+        <input id="transport" type="number" value="2000">
+
+        <label>Other Costs (KSh)</label>
+        <input id="otherCosts" type="number" value="1000">
+
+        <label>Discount (KSh)</label>
+        <input id="discount" type="number" value="0">
+
+        <button class="main-btn" onclick="calculateQuotation()">
+            CALCULATE QUOTATION
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- QUOTATION -->
+
+<section id="quotation" class="page">
+
+    <div class="card">
+
+        <div class="quote-header">
+
+            <h2>PRIME FIT INTERIORS</h2>
+
+            <p>
+                PROFESSIONAL QUOTATION
+            </p>
+
+            <p class="small">
+                Quotation No:
+                <strong id="quotationNumber"></strong>
+            </p>
+
+            <p class="small">
+                Date:
+                <strong id="quotationDate"></strong>
+            </p>
+
+            <span class="status">
+                VALID
+            </span>
+
+        </div>
+
+
+        <hr>
+
+
+        <!-- CUSTOMER -->
+
+        <div id="customerQuote"></div>
+
+
+        <!-- PROJECT -->
+
+        <h3>Project</h3>
+
+        <p>
+            Wardrobe
+        </p>
+
+
+        <!-- MEASUREMENTS -->
+
+        <h3>Measurements</h3>
+
+        <p>
+            Width:
+            <strong id="quoteWidth"></strong> mm
+        </p>
+
+        <p>
+            Height:
+            <strong id="quoteHeight"></strong> mm
+        </p>
+
+        <p>
+            Depth:
+            <strong id="quoteDepth"></strong> mm
+        </p>
+
+
+        <!-- MATERIALS -->
+
+        <h3>Materials</h3>
+
+        <div style="overflow-x:auto;">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Material</th>
+                        <th>Finish</th>
+                        <th>Qty</th>
+                        <th>Unit</th>
+                        <th>Unit Price</th>
+                        <th>Total</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="quotationMaterials"></tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- FULL COST SUMMARY -->
+
+        <h3>Cost Summary</h3>
+
+        <div class="total-box">
+
+            <div class="cost-row">
+                <span>Materials</span>
+                <strong>
+                    KSh <span id="materialsTotal">0</span>
+                </strong>
+            </div>
+
+            <div class="cost-row">
+                <span>Labour</span>
+                <strong>
+                    KSh <span id="quoteLabour">0</span>
+                </strong>
+            </div>
+
+            <div class="cost-row">
+                <span>Transport</span>
+                <strong>
+                    KSh <span id="quoteTransport">0</span>
+                </strong>
+            </div>
+
+            <div class="cost-row">
+                <span>Other Costs</span>
+                <strong>
+                    KSh <span id="quoteOther">0</span>
+                </strong>
+            </div>
+
+            <div class="cost-row">
+                <span>Discount</span>
+                <strong>
+                    KSh <span id="quoteDiscount">0</span>
+                </strong>
+            </div>
+
+            <div class="grand-total">
+                <span>GRAND TOTAL</span>
+
+                <span>
+                    KSh <span id="grandTotal">0</span>
+                </span>
+            </div>
+
+        </div>
+
+
+        <!-- TERMS -->
+
+        <h3>Terms</h3>
+
+        <p class="small">
+            This quotation is for testing purposes.
+            Final terms and quotation expiry settings
+            will be added to the production version.
+        </p>
+
+
+        <!-- PRINT -->
+
+        <div class="no-print">
+
+            <button
+                class="main-btn"
+                onclick="saveToPDF()"
+            >
+                SAVE TO PDF / PRINT
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<script>
+
+let customer = null;
+
+let generatedMaterials = [];
+
+let quotationNumber =
+    "PF-" +
+    Date.now().toString().slice(-6);
+
+
+/* NAVIGATION */
+
+function showPage(pageId) {
+
+    document
+        .querySelectorAll(".page")
+        .forEach(function(page) {
+
+            page.classList.remove("active");
+
+        });
+
+    document
+        .getElementById(pageId)
+        .classList.add("active");
+
+}
+
+
+/* CUSTOMER */
+
+function saveCustomer() {
+
+    const name =
+        document
+        .getElementById("customerName")
+        .value
+        .trim();
+
+    const phone =
+        document
+        .getElementById("customerPhone")
+        .value
+        .trim();
+
+    const email =
+        document
+        .getElementById("customerEmail")
+        .value
+        .trim();
+
+    const address =
+        document
+        .getElementById("customerAddress")
+        .value
+        .trim();
+
+
+    if (!name) {
+
+        alert(
+            "Please enter the customer name."
+        );
+
+        return;
+    }
+
+
+    customer = {
+
+        name,
+        phone,
+        email,
+        address
+
+    };
+
+
+    localStorage.setItem(
+        "primefitCustomer",
+        JSON.stringify(customer)
+    );
+
+
+    const message =
+        document.getElementById(
+            "customerMessage"
+        );
+
+    message.style.display = "block";
+
+    message.innerText =
+        "Customer saved successfully.";
+
+
+    displayCustomer();
+
+}
+
+
+function displayCustomer() {
+
+    if (!customer) {
+
+        const saved =
+            localStorage.getItem(
+                "primefitCustomer"
+            );
+
+        if (saved) {
+
+            customer =
+                JSON.parse(saved);
+
+        }
+
+    }
+
+
+    if (!customer) {
+        return;
+    }
+
+
+    document.getElementById(
+        "customerDisplay"
+    ).innerHTML = `
+
+        <strong>
+            ${escapeHtml(customer.name)}
+        </strong>
+
+        <p>
+            Phone:
+            ${escapeHtml(customer.phone)}
+        </p>
+
+        <p>
+            Email:
+            ${escapeHtml(customer.email)}
+        </p>
+
+        <p>
+            Address:
+            ${escapeHtml(customer.address)}
+        </p>
+
+    `;
+
+}
+
+
+/* MATERIAL PICTURES */
+
+function materialImage(materialName) {
+
+    const name =
+        materialName.toLowerCase();
+
+
+    /* MDF */
+
+    if (name.includes("mdf")) {
+
+        return `
+
+        <div class="material-picture">
+
+            <svg viewBox="0 0 100 100">
+
+                <rect
+                    x="12"
+                    y="24"
+                    width="76"
+                    height="52"
+                    rx="4"
+                    fill="#c89b6d"
+                    stroke="#704b2a"
+                    stroke-width="3"
+                />
+
+                <rect
+                    x="19"
+                    y="31"
+                    width="62"
+                    height="38"
+                    fill="#e4c49c"
+                />
+
+                <text
+                    x="50"
+                    y="55"
+                    text-anchor="middle"
+                    font-size="13"
+                >
+                    MDF
+                </text>
+
+            </svg>
+
+        </div>
+
+        `;
+
+    }
+
+
+    /* PLYWOOD */
+
+    if (name.includes("plywood")) {
+
+        return `
+
+        <div class="material-picture">
+
+            <svg viewBox="0 0 100 100">
+
+                <rect
+                    x="15"
+                    y="18"
+                    width="70"
+                    height="64"
+                    fill="#d6a76b"
+                    stroke="#70451f"
+                    stroke-width="3"
+                />
+
+                <line
+                    x1="15"
+                    y1="34"
+                    x2="85"
+                    y2="34"
+                    stroke="#8b5a2b"
+                    stroke-width="3"
+                />
+
+                <line
+                    x1="15"
+                    y1="50"
+                    x2="85"
+                    y2="50"
+                    stroke="#8b5a2b"
+                    stroke-width="3"
+                />
+
+                <line
+                    x1="15"
+                    y1="66"
+                    x2="85"
+                    y2="66"
+                    stroke="#8b5a2b"
+                    stroke-width="3"
+                />
+
+            </svg>
+
+        </div>
+
+        `;
+
+    }
+
+
+    /* TIMBER */
+
+    if (
+        name.includes("timber") ||
+        name.includes("wood")
+    ) {
+
+        return `
+
+        <div class="material-picture">
+
+            <svg viewBox="0 0 100 100">
+
+                <rect
+                    x="10"
+                    y="32"
+                    width="80"
+                    height="34"
+                    rx="5"
+                    fill="#9b642f"
+                    stroke="#5c3518"
+                    stroke-width="3"
+                />
+
+                <path
+                    d="M18 42
+                       Q30 34 42 43
+                       T66 42
+                       T84 43"
+                    fill="none"
+                    stroke="#5c3518"
+                    stroke-width="3"
+                />
+
+                <path
+                    d="M18 55
+                       Q30 47 42 56
+                       T66 55
+                       T84 56"
+                    fill="none"
+                    stroke="#5c3518"
+                    stroke-width="2"
+                />
+
+            </svg>
+
+        </div>
+
+        `;
+
+    }
+
+
+    /* SCREWS */
+
+    if (name.includes("screw")) {
+
+        return `
+
+        <div class="material-picture">
+
+            <svg viewBox="0 0 100 100">
+
+                <line
+                    x1="22"
+                    y1="75"
+                    x2="72"
+                    y2="25"
+                    stroke="#666"
+                    stroke-width="9"
+                />
+
+                <polygon
+                    points="70,17 88,27 73,40"
+                    fill="#444"
+                />
+
+                <line
+                    x1="31"
+                    y1="66"
+                    x2="44"
+                    y2="79"
+                    stroke="#333"
+                    stroke-width="3"
+                />
+
+                <line
+                    x1="39"
+                    y1="58"
+                    x2="52"
+                    y2="71"
+                    stroke="#333"
+                    stroke-width="3"
+                />
+
+                <line
+                    x1="47"
+                    y1="50"
+                    x2="60"
+                    y2="63"
+                    stroke="#333"
+                    stroke-width="3"
+                />
+
+            </svg>
+
+        </div>
+
+        `;
+
+    }
+
+
+    /* HINGES */
+
+    if (name.includes("hinge")) {
+
+        return `
+
+        <div class="material-picture">
+
+            <svg viewBox="0 0 100 100">
+
+                <rect
+                    x="20"
+                    y="20"
+                    width="24"
+                    height="60"
+                    rx="3"
+                    fill="#aaa"
+                />
+
+                <rect
+                    x="56"
+                    y="20"
+                    width="24"
+                    height="60"
+                    rx="3"
+                    fill="#aaa"
+                />
+
+                <circle
+                    cx="50"
+                    cy="30"
+                    r="5"
+                    fill="#555"
+                />
+
+                <circle
+                    cx="50"
+                    cy="50"
+                    r="5"
+                    fill="#555"
+                />
+
+                <circle
+                    cx="50"
+                    cy="70"
+                    r="5"
+                    fill="#555"
+                />
+
+            </svg>
+
+        </div>
+
+        `;
+
+    }
+
+
+    /* HANDLES */
+
+    if (name.includes("handle")) {
+
+        return `
+
+        <div class="material-picture">
+
+            <svg viewBox="0 0 100 100">
+
+                <rect
+                    x="24"
+                    y="30"
+                    width="52"
+                    height="9"
+                    rx="4"
+                    fill="#555"
+                />
+
+                <rect
+                    x="29"
+                    y="39"
+                    width="8"
+                    height="27"
+                    fill="#777"
+                />
+
+                <rect
+                    x="63"
+                    y="39"
+                    width="8"
+                    height="27"
+                    fill="#777"
+                />
+
+            </svg>
+
+        </div>
+
+        `;
+
+    }
+
+
+    /* GLASS */
+
+    if (name.includes("glass")) {
+
+        return `
+
+        <div class="material-picture">
+
+            <svg viewBox="0 0 100 100">
+
+                <rect
+                    x="20"
+                    y="12"
+                    width="60"
+                    height="76"
+                    fill="#cdebf2"
+                    stroke="#5799aa"
+                    stroke-width="4"
+                />
+
+                <path
+                    d="M27 73 L72 25"
+                    stroke="white"
+                    stroke-width="7"
+                />
+
+            </svg>
+
+        </div>
+
+        `;
+
+    }
+
+
+    /* PAINT */
+
+    if (name.includes("paint")) {
+
+        return `
+
+        <div class="material-picture">
+
+            <svg viewBox="0 0 100 100">
+
+                <rect
+                    x="28"
+                    y="28"
+                    width="44"
+                    height="50"
+                    rx="5"
+                    fill="#ddd"
+                    stroke="#555"
+                    stroke-width="3"
+                />
+
+                <rect
+                    x="28"
+                    y="48"
+                    width="44"
+                    height="24"
+                    fill="#eee"
+                />
+
+                <path
+                    d="M34 25 H66"
+                    stroke="#555"
+                    stroke-width="7"
+                />
+
+                <text
+                    x="50"
+                    y="64"
+                    text-anchor="middle"
+                    font-size="10"
+                >
+                    PAINT
+                </text>
+
+            </svg>
+
+        </div>
+
+        `;
+
+    }
+
+
+    /* EDGE BANDING */
+
+    if (name.includes("edge")) {
+
+        return `
+
+        <div class="material-picture">
+
+            <svg viewBox="0 0 100 100">
+
+                <circle
+                    cx="50"
+                    cy="50"
+                    r="32"
+                    fill="#d8b27a"
+                    stroke="#8b5a2b"
+                    stroke-width="5"
+                />
+
+                <circle
+                    cx="50"
+                    cy="50"
+                    r="12"
+                    fill="#f1f1f1"
+                    stroke="#8b5a2b"
+                    stroke-width="4"
+                />
+
+            </svg>
+
+        </div>
+
+        `;
+
+    }
+
+
+    /* DRAWER RUNNERS */
+
+    if (
+        name.includes("runner") ||
+        name.includes("drawer")
+    ) {
+
+        return `
+
+        <div class="material-picture">
+
+            <svg viewBox="0 0 100 100">
+
+                <rect
+                    x="12"
+                    y="30"
+                    width="76"
+                    height="8"
+                    fill="#777"
+                />
+
+                <rect
+                    x="12"
+                    y="56"
+                    width="76"
+                    height="8"
+                    fill="#555"
+                />
+
+                <circle
+                    cx="28"
+                    cy="72"
+                    r="7"
+                    fill="#999"
+                />
+
+                <circle
+                    cx="72"
+                    cy="72"
+                    r="7"
+                    fill="#999"
+                />
+
+            </svg>
+
+        </div>
+
+        `;
+
+    }
+
+
+    /* DEFAULT */
+
+    return `
+
+    <div class="material-picture">
+
+        <svg viewBox="0 0 100 100">
+
+            <rect
+                x="20"
+                y="25"
+                width="60"
+                height="50"
+                rx="5"
+                fill="#aaa"
+                stroke="#555"
+                stroke-width="3"
+            />
+
+        </svg>
+
+    </div>
+
+    `;
+
+}
+
+
+/* GENERATE MATERIALS */
+
+function generateMaterials() {
+
+    const width =
+        Number(
+            document.getElementById("width").value
+        );
+
+    const height =
+        Number(
+            document.getElementById("height").value
+        );
+
+    const depth =
+        Number(
+            document.getElementById("depth").value
+        );
+
+    const doors =
+        Number(
+            document.getElementById("doors").value
+        );
+
+    const drawers =
+        Number(
+            document.getElementById("drawers").value
+        );
+
+    const boardMaterial =
+        document.getElementById(
+            "boardMaterial"
+        ).value;
+
+    const boardFinish =
+        document.getElementById(
+            "boardFinish"
+        ).value;
+
+
+    if (
+        width <= 0 ||
+        height <= 0 ||
+        depth <= 0
+    ) {
+
+        alert(
+            "Please enter valid measurements."
+        );
+
+        return;
+    }
+
+
+    const boardQty =
+        Math.max(
+            1,
+            Math.ceil(
+                (width * height) /
+                2800000
+            )
+        );
+
+
+    const edgeQty =
+        Math.ceil(
+            (
+                (width * 2) +
+                (height * 2) +
+                (depth * 2)
+            ) / 1000
+        );
+
+
+    const hingeQty =
+        doors * 3;
+
+
+    const handleQty =
+        doors;
+
+
+    const runnerQty =
+        drawers;
+
+
+    generatedMaterials = [
+
+        {
+            name: boardMaterial,
+            finish: boardFinish,
+            quantity: boardQty,
+            unit: "sheets",
+            price:
+                boardMaterial === "MDF"
+                ? 4500
+                : boardMaterial === "Plywood"
+                ? 5000
+                : 3500
+        },
+
+        {
+            name: "Edge Banding",
+            finish: boardFinish,
+            quantity: edgeQty,
+            unit: "m",
+            price: 80
+        },
+
+        {
+            name: "Hinges",
+            finish: "Standard",
+            quantity: hingeQty,
+            unit: "pcs",
+            price: 180
+        },
+
+        {
+            name: "Handles",
+            finish: "Silver",
+            quantity: handleQty,
+            unit: "pcs",
+            price: 350
+        },
+
+        {
+            name: "Drawer Runners",
+            finish: "Standard",
+            quantity: runnerQty,
+            unit: "pairs",
+            price: 850
+        },
+
+        {
+            name: "Screws",
+            finish: "Standard",
+            quantity: 1,
+            unit: "box",
+            price: 800
+        },
+
+        {
+            name: "Wood Glue",
+            finish: "Standard",
+            quantity: 2,
+            unit: "litres",
+            price: 450
+        }
+
+    ];
+
+
+    displayMaterials();
+
+    calculateQuotation();
+
+}
+
+
+/* DISPLAY MATERIALS */
+
+function displayMaterials() {
+
+    const container =
+        document.getElementById(
+            "materialList"
+        );
+
+
+    container.innerHTML = "";
+
+
+    generatedMaterials.forEach(
+        function(material) {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+            card.className =
+                "material-card";
+
+
+            card.innerHTML = `
+
+                ${materialImage(
+                    material.name
+                )}
+
+                <h3>
+                    ${escapeHtml(
+                        material.name
+                    )}
+                </h3>
+
+                <p class="finish">
+                    Finish:
+                    ${escapeHtml(
+                        material.finish
+                    )}
+                </p>
+
+                <p>
+                    Quantity:
+                    ${material.quantity}
+                    ${escapeHtml(
+                        material.unit
+                    )}
+                </p>
+
+                <p>
+                    Unit Price:
+                    KSh
+                    ${formatMoney(
+                        material.price
+                    )}
+                </p>
+
+                <p>
+                    Total:
+                    KSh
+                    ${formatMoney(
+                        material.quantity *
+                        material.price
+                    )}
+                </p>
+
+            `;
+
+
+            container.appendChild(card);
+
+        }
+    );
+
+}
+
+
+/* CALCULATE QUOTATION */
+
+function calculateQuotation() {
+
+    if (
+        generatedMaterials.length === 0
+    ) {
+
+        alert(
+            "Generate materials first."
+        );
+
+        return;
+    }
+
+
+    let materialsTotal = 0;
+
+
+    generatedMaterials.forEach(
+        function(material) {
+
+            materialsTotal +=
+                material.quantity *
+                material.price;
+
+        }
+    );
+
+
+    const labour =
+        Number(
+            document.getElementById(
+                "labour"
+            ).value
+        ) || 0;
+
+
+    const transport =
+        Number(
+            document.getElementById(
+                "transport"
+            ).value
+        ) || 0;
+
+
+    const other =
+        Number(
+            document.getElementById(
+                "otherCosts"
+            ).value
+        ) || 0;
+
+
+    const discount =
+        Number(
+            document.getElementById(
+                "discount"
+            ).value
+        ) || 0;
+
+
+    const grandTotal =
+        materialsTotal +
+        labour +
+        transport +
+        other -
+        discount;
+
+
+    document.getElementById(
+        "materialsTotal"
+    ).innerText =
+        formatMoney(materialsTotal);
+
+
+    document.getElementById(
+        "quoteLabour"
+    ).innerText =
+        formatMoney(labour);
+
+
+    document.getElementById(
+        "quoteTransport"
+    ).innerText =
+        formatMoney(transport);
+
+
+    document.getElementById(
+        "quoteOther"
+    ).innerText =
+        formatMoney(other);
+
+
+    document.getElementById(
+        "quoteDiscount"
+    ).innerText =
+        formatMoney(discount);
+
+
+    document.getElementById(
+        "grandTotal"
+    ).innerText =
+        formatMoney(grandTotal);
+
+
+    updateQuotation();
+
+}
+
+
+/* UPDATE QUOTATION */
+
+function updateQuotation() {
+
+    document.getElementById(
+        "quotationNumber"
+    ).innerText =
+        quotationNumber;
+
+
+    document.getElementById(
+        "quotationDate"
+    ).innerText =
+        new Date().toLocaleDateString();
+
+
+    document.getElementById(
+        "quoteWidth"
+    ).innerText =
+        document.getElementById(
+            "width"
+        ).value;
+
+
+    document.getElementById(
+        "quoteHeight"
+    ).innerText =
+        document.getElementById(
+            "height"
+        ).value;
+
+
+    document.getElementById(
+        "quoteDepth"
+    ).innerText =
+        document.getElementById(
+            "depth"
+        ).value;
+
+
+    /* CUSTOMER */
+
+    if (customer) {
+
+        document.getElementById(
+            "customerQuote"
+        ).innerHTML = `
+
+            <h3>Customer</h3>
+
+            <p>
+                <strong>
+                    ${escapeHtml(
+                        customer.name
+                    )}
+                </strong>
+            </p>
+
+            <p>
+                Phone:
+                ${escapeHtml(
+                    customer.phone
+                )}
+            </p>
+
+            <p>
+                Email:
+                ${escapeHtml(
+                    customer.email
+                )}
+            </p>
+
+            <p>
+                Address:
+                ${escapeHtml(
+                    customer.address
+                )}
+            </p>
+
+        `;
+
+    } else {
+
+        document.getElementById(
+            "customerQuote"
+        ).innerHTML = `
+            <h3>Customer</h3>
+            <p>No customer entered.</p>
+        `;
+
+    }
+
+
+    /* MATERIAL TABLE */
+
+    const table =
+        document.getElementById(
+            "quotationMaterials"
+        );
+
+
+    table.innerHTML = "";
+
+
+    generatedMaterials.forEach(
+        function(material) {
+
+            const total =
+                material.quantity *
+                material.price;
+
+
+            const row =
+                document.createElement(
+                    "tr"
+                );
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${escapeHtml(
+                        material.name
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        material.finish
+                    )}
+                </td>
+
+                <td>
+                    ${material.quantity}
+                </td>
+
+                <td>
+                    ${escapeHtml(
+                        material.unit
+                    )}
+                </td>
+
+                <td>
+                    KSh
+                    ${formatMoney(
+                        material.price
+                    )}
+                </td>
+
+                <td>
+                    KSh
+                    ${formatMoney(
+                        total
+                    )}
+                </td>
+
+            `;
+
+
+            table.appendChild(row);
+
+        }
+    );
+
+
+    /* COST SUMMARY */
+
+    const materialsTotal =
+        generatedMaterials.reduce(
+            function(sum, material) {
+
+                return sum +
+                    material.quantity *
+                    material.price;
+
+            },
+            0
+        );
+
+
+    const labour =
+        Number(
+            document.getElementById(
+                "labour"
+            ).value
+        ) || 0;
+
+
+    const transport =
+        Number(
+            document.getElementById(
+                "transport"
+            ).value
+        ) || 0;
+
+
+    const other =
+        Number(
+            document.getElementById(
+                "otherCosts"
+            ).value
+        ) || 0;
+
+
+    const discount =
+        Number(
+            document.getElementById(
+                "discount"
+            ).value
+        ) || 0;
+
+
+    const grandTotal =
+        materialsTotal +
+        labour +
+        transport +
+        other -
+        discount;
+
+
+    document.getElementById(
+        "materialsTotal"
+    ).innerText =
+        formatMoney(materialsTotal);
+
+
+    document.getElementById(
+        "quoteLabour"
+    ).innerText =
+        formatMoney(labour);
+
+
+    document.getElementById(
+        "quoteTransport"
+    ).innerText =
+        formatMoney(transport);
+
+
+    document.getElementById(
+        "quoteOther"
+    ).innerText =
+        formatMoney(other);
+
+
+    document.getElementById(
+        "quoteDiscount"
+    ).innerText =
+        formatMoney(discount);
+
+
+    document.getElementById(
+        "grandTotal"
+    ).innerText =
+        formatMoney(grandTotal);
+
+}
+
+
+/* PDF / PRINT */
+
+function saveToPDF() {
+
+    if (
+        generatedMaterials.length === 0
+    ) {
+
+        alert(
+            "Please generate materials first."
+        );
+
+        return;
+    }
+
+
+    updateQuotation();
+
+
+    /*
+       Android browser will open its print
+       screen. From there choose:
+       "Save as PDF".
+    */
+
+    window.print();
+
+}
+
+
+/* MONEY */
+
+function formatMoney(value) {
+
+    return Number(value)
+        .toLocaleString(
+            "en-KE",
+            {
+                maximumFractionDigits: 0
+            }
+        );
+
+}
+
+
+/* SECURITY / HTML DISPLAY */
+
+function escapeHtml(value) {
+
+    if (
+        value === undefined ||
+        value === null
+    ) {
+
+        return "";
+
+    }
+
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* LOAD CUSTOMER */
+
+displayCustomer();
+
+</script>
+
+</body>
+</html>
