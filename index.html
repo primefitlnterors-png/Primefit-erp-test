@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrimeFit ERP</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f4f7f5;
+  color: #222;
+}
+
+header {
+  background: #0b6b3a;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+header p {
+  margin: 8px 0 0;
+  font-size: 14px;
+}
+
+nav {
+  display: flex;
+  background: #063d23;
+}
+
+nav button {
+  flex: 1;
+  padding: 14px 5px;
+  border: none;
+  background: transparent;
+  color: white;
+  font-size: 14px;
+}
+
+nav button.active {
+  background: #0b6b3a;
+}
+
+.container {
+  padding: 16px;
+  max-width: 700px;
+  margin: auto;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+h2 {
+  color: #0b6b3a;
+  margin-top: 0;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 12px;
+  margin: 6px 0 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+button.primary {
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 8px;
+  background: #0b6b3a;
+  color: white;
+  font-size: 16px;
+  margin-top: 8px;
+}
+
+button.secondary {
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 8px;
+  background: #ddd;
+  color: #222;
+  font-size: 16px;
+  margin-top: 8px;
+}
+
+.hidden {
+  display: none;
+}
+
+.feature {
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.result {
+  background: #eef8f1;
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 12px;
+}
+
+.total {
+  font-size: 24px;
+  font-weight: bold;
+  color: #0b6b3a;
+  text-align: right;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td {
+  padding: 7px;
+  border-bottom: 1px solid #ddd;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>PrimeFit ERP</h1>
+  <p>Smart Quotation. Accurate Pricing. Better Business.</p>
+</header>
+
+<nav>
+  <button id="navDashboard" class="active" onclick="showPage('dashboard')">Dashboard</button>
+  <button id="navCustomer" onclick="showPage('customer')">Customer</button>
+  <button id="navQuotation" onclick="showPage('quotation')">Quotation</button>
+</nav>
+
+<div class="container">
+
+  <!-- DASHBOARD -->
+  <section id="dashboard">
+
+    <div class="card">
+      <h2>Welcome to PrimeFit ERP</h2>
+
+      <div class="feature">📋 Create professional quotations</div>
+      <div class="feature">📐 Measurement-based calculations</div>
+      <div class="feature">🧱 Materials and quantities</div>
+      <div class="feature">💰 Labour and project costs</div>
+      <div class="feature">📄 Save and print quotations</div>
+      <div class="feature">💾 Works offline on your phone</div>
+      <div class="feature">🔐 Business data security</div>
+    </div>
+
+    <div class="card">
+      <h2>Quick Start</h2>
+      <button class="primary" onclick="showPage('customer')">
+        Add Customer
+      </button>
+
+      <button class="primary" onclick="showPage('quotation')">
+        New Quotation
+      </button>
+    </div>
+
+  </section>
+
+  <!-- CUSTOMER -->
+  <section id="customer" class="hidden">
+
+    <div class="card">
+      <h2>Customer Details</h2>
+
+      <label>Full Name</label>
+      <input id="customerName" placeholder="Customer name">
+
+      <label>Phone</label>
+      <input id="customerPhone" placeholder="Phone number">
+
+      <label>Email</label>
+      <input id="customerEmail" type="email" placeholder="Email address">
+
+      <button class="primary" onclick="saveCustomer()">
+        Save Customer
+      </button>
+
+      <div id="customerResult"></div>
+    </div>
+
+  </section>
+
+  <!-- QUOTATION -->
+  <section id="quotation" class="hidden">
+
+    <div class="card">
+
+      <h2>New Quotation</h2>
+
+      <label>Job Type</label>
+      <select id="jobType" onchange="changeJob()">
+        <option value="Wardrobe">Wardrobe</option>
+        <option value="Kitchen">Kitchen</option>
+        <option value="Furniture">Furniture</option>
+        <option value="Gypsum">Gypsum</option>
+        <option value="Painting">Painting</option>
+        <option value="Aluminium">Aluminium</option>
+        <option value="Repair">Repair / Installation</option>
+        <option value="Custom">Custom</option>
+      </select>
+
+      <div id="wardrobeFields">
+
+        <h3>Wardrobe Measurements</h3>
+
+        <label>Width (mm)</label>
+        <input id="width" type="number" value="2400">
+
+        <label>Height (mm)</label>
+        <input id="height" type="number" value="2100">
+
+        <label>Depth (mm)</label>
+        <input id="depth" type="number" value="600">
+
+        <label>Number of Doors</label>
+        <input id="doors" type="number" value="4">
+
+        <label>Number of Drawers</label>
+        <input id="drawers" type="number" value="3">
+
+        <label>Material</label>
+        <select id="material">
+          <option>18mm MDF</option>
+          <option>18mm Plywood</option>
+          <option>Timber</option>
+        </select>
+
+        <label>Finish</label>
+        <select id="finish">
+          <option>Melamine</option>
+          <option>Paint</option>
+          <option>Veneer</option>
+        </select>
+
+      </div>
+
+      <h3>Costs</h3>
+
+      <label>Materials (KSh)</label>
+      <input id="materials" type="number" value="35000">
+
+      <label>Labour (KSh)</label>
+      <input id="labour" type="number" value="12000">
+
+      <label>Transport (KSh)</label>
+      <input id="transport" type="number" value="2000">
+
+      <label>Other Costs (KSh)</label>
+      <input id="other" type="number" value="1000">
+
+      <label>Discount (KSh)</label>
+      <input id="discount" type="number" value="0">
+
+      <label>Valid Until</label>
+      <input id="expiry" type="date">
+
+      <button class="primary" onclick="calculateQuotation()">
+        Calculate Quotation
+      </button>
+
+    </div>
+
+    <div id="quotationResult"></div>
+
+  </section>
+
+</div>
+
+<script>
+
+function showPage(page) {
+
+  document.getElementById("dashboard").classList.add("hidden");
+  document.getElementById("customer").classList.add("hidden");
+  document.getElementById("quotation").classList.add("hidden");
+
+  document.getElementById(page).classList.remove("hidden");
+
+  document.querySelectorAll("nav button")
+    .forEach(button => button.classList.remove("active"));
+
+  if (page === "dashboard")
+    document.getElementById("navDashboard").classList.add("active");
+
+  if (page === "customer")
+    document.getElementById("navCustomer").classList.add("active");
+
+  if (page === "quotation")
+    document.getElementById("navQuotation").classList.add("active");
+}
+
+
+function saveCustomer() {
+
+  const customer = {
+    name: document.getElementById("customerName").value,
+    phone: document.getElementById("customerPhone").value,
+    email: document.getElementById("customerEmail").value
+  };
+
+  localStorage.setItem(
+    "primefitCustomer",
+    JSON.stringify(customer)
+  );
+
+  document.getElementById("customerResult").innerHTML =
+    '<div class="result">Customer saved successfully.</div>';
+}
+
+
+function changeJob() {
+
+  const job = document.getElementById("jobType").value;
+
+  if (job === "Wardrobe") {
+    document.getElementById("wardrobeFields").style.display = "block";
+  } else {
+    document.getElementById("wardrobeFields").style.display = "none";
+  }
+}
+
+
+function calculateQuotation() {
+
+  const width =
+    Number(document.getElementById("width").value);
+
+  const height =
+    Number(document.getElementById("height").value);
+
+  const doors =
+    Number(document.getElementById("doors").value);
+
+  const drawers =
+    Number(document.getElementById("drawers").value);
+
+  const materials =
+    Number(document.getElementById("materials").value);
+
+  const labour =
+    Number(document.getElementById("labour").value);
+
+  const transport =
+    Number(document.getElementById("transport").value);
+
+  const other =
+    Number(document.getElementById("other").value);
+
+  const discount =
+    Number(document.getElementById("discount").value);
+
+  const area =
+    (width / 1000) * (height / 1000);
+
+  const sheets =
+    Math.max(1, Math.ceil(area * 2.5));
+
+  const edge =
+    Math.ceil(
+      ((width * 2) + (height * doors)) / 1000
+    );
+
+  const hinges = doors * 3;
+
+  const handles = doors + drawers;
+
+  const runners = drawers;
+
+  const total =
+    materials +
+    labour +
+    transport +
+    other -
+    discount;
+
+  const quotation = {
+    date: new Date().toLocaleDateString(),
+    job: document.getElementById("jobType").value,
+    width,
+    height,
+    doors,
+    drawers,
+    sheets,
+    edge,
+    hinges,
+    handles,
+    runners,
+    materials,
+    labour,
+    transport,
+    other,
+    discount,
+    total
+  };
+
+  localStorage.setItem(
+    "primefitQuotation",
+    JSON.stringify(quotation)
+  );
+
+  document.getElementById("quotationResult").innerHTML = `
+
+    <div class="card">
+
+      <h2>Quotation Preview</h2>
+
+      <p><strong>Prime Fit Interiors</strong></p>
+
+      <p>
+        Date: ${quotation.date}
+      </p>
+
+      <p>
+        Job: ${quotation.job}
+      </p>
+
+      <div class="result">
+
+        <h3>Calculated Materials</h3>
+
+        <table>
+
+          <tr>
+            <td>MDF / Boards</td>
+            <td>${sheets} sheets</td>
+          </tr>
+
+          <tr>
+            <td>Edge Banding</td>
+            <td>${edge} metres</td>
+          </tr>
+
+          <tr>
+            <td>Hinges</td>
+            <td>${hinges} pieces</td>
+          </tr>
+
+          <tr>
+            <td>Handles</td>
+            <td>${handles} pieces</td>
+          </tr>
+
+          <tr>
+            <td>Drawer Runners</td>
+            <td>${runners} pairs</td>
+          </tr>
+
+          <tr>
+            <td>Screws</td>
+            <td>1 box</td>
+          </tr>
+
+          <tr>
+            <td>Wood Glue</td>
+            <td>2 litres</td>
+          </tr>
+
+        </table>
+
+      </div>
+
+      <div class="result">
+
+        <h3>Costs</h3>
+
+        <table>
+
+          <tr>
+            <td>Materials</td>
+            <td>KSh ${materials.toLocaleString()}</td>
+          </tr>
+
+          <tr>
+            <td>Labour</td>
+            <td>KSh ${labour.toLocaleString()}</td>
+          </tr>
+
+          <tr>
+            <td>Transport</td>
+            <td>KSh ${transport.toLocaleString()}</td>
+          </tr>
+
+          <tr>
+            <td>Other</td>
+            <td>KSh ${other.toLocaleString()}</td>
+          </tr>
+
+          <tr>
+            <td>Discount</td>
+            <td>KSh ${discount.toLocaleString()}</td>
+          </tr>
+
+        </table>
+
+        <p class="total">
+          KSh ${total.toLocaleString()}
+        </p>
+
+      </div>
+
+      <button class="primary" onclick="window.print()
