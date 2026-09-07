@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrimeFit ERP</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f7f5;
+    color: #222;
+}
+
+header {
+    background: #087f3f;
+    color: white;
+    padding: 18px 15px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+nav {
+    display: flex;
+    background: white;
+    border-bottom: 1px solid #ddd;
+}
+
+nav button {
+    flex: 1;
+    border: none;
+    background: white;
+    padding: 14px 5px;
+    font-weight: bold;
+    color: #087f3f;
+    cursor: pointer;
+}
+
+.container {
+    padding: 15px;
+    max-width: 700px;
+    margin: auto;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.card {
+    background: white;
+    padding: 18px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.card h2 {
+    margin-top: 0;
+    color: #087f3f;
+}
+
+label {
+    display: block;
+    margin-top: 12px;
+    font-weight: bold;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 11px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+button.primary {
+    width: 100%;
+    margin-top: 15px;
+    padding: 13px;
+    border: none;
+    border-radius: 7px;
+    background: #087f3f;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button.secondary {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    border: 1px solid #087f3f;
+    border-radius: 7px;
+    background: white;
+    color: #087f3f;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.result {
+    margin-top: 15px;
+    padding: 15px;
+    background: #eef8f1;
+    border-radius: 8px;
+}
+
+#quotationPrint {
+    background: white;
+    padding: 20px;
+}
+
+.quote-title {
+    text-align: center;
+    margin: 0 0 5px;
+}
+
+.small {
+    color: #555;
+    font-size: 13px;
+}
+
+.total-box {
+    margin-top: 18px;
+    border: 1px solid #ccc;
+    padding: 14px;
+}
+
+.cost-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.grand-total {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 2px solid #123c2a;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    color: #777;
+    font-size: 12px;
+}
+
+/* =====================================================
+   IMPORTANT PDF FIX
+   ===================================================== */
+
+@media print {
+
+    @page {
+        size: A4;
+        margin: 15mm;
+    }
+
+    html,
+    body {
+        background: white !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    /* Hide everything first */
+    body * {
+        visibility: hidden !important;
+    }
+
+    /* Show ONLY the quotation */
+    #quotationPrint,
+    #quotationPrint * {
+        visibility: visible !important;
+    }
+
+    #quotationPrint {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: white !important;
+        box-shadow: none !important;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="no-print">
+    <h1>PrimeFit ERP</h1>
+    <div>Quotation & Customer Management</div>
+</header>
+
+<nav class="no-print">
+    <button onclick="showPage('dashboard')">
+        Dashboard
+    </button>
+
+    <button onclick="showPage('customer')">
+        Customer
+    </button>
+
+    <button onclick="showPage('quotation')">
+        Quotation
+    </button>
+</nav>
+
+
+<div class="container">
+
+<!-- =====================================================
+     DASHBOARD
+     ===================================================== -->
+
+<section id="dashboard" class="page active">
+
+    <div class="card">
+
+        <h2>Welcome to PrimeFit ERP</h2>
+
+        <p>
+            Manage your quotations, customers and projects
+            from one place.
+        </p>
+
+        <p>🧮 Measurement-based quotation calculations</p>
+
+        <p>📋 Professional quotations</p>
+
+        <p>👥 Customer management</p>
+
+        <p>📄 Print and save quotations</p>
+
+        <p>💾 Offline-ready business data</p>
+
+        <p>🔐 Secure business information</p>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     CUSTOMER
+     ===================================================== -->
+
+<section id="customer" class="page">
+
+    <div class="card">
+
+        <h2>Customers</h2>
+
+        <label>
+            Customer Name
+        </label>
+
+        <input
+            id="customerName"
+            value="Goerffery mwangi"
+        >
+
+        <label>
+            Phone
+        </label>
+
+        <input
+            id="customerPhone"
+            value="0795692797"
+        >
+
+        <label>
+            Email
+        </label>
+
+        <input
+            id="customerEmail"
+            value="goefferymwangi44@gmail.com"
+        >
+
+        <label>
+            KRA PIN
+        </label>
+
+        <input
+            id="kraPin"
+            value="Trf"
+        >
+
+        <button
+            class="primary"
+            onclick="saveCustomer()"
+        >
+            Save Customer
+        </button>
+
+        <div
+            id="customerMessage"
+            class="result"
+            style="display:none"
+        ></div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     QUOTATION
+     ===================================================== -->
+
+<section id="quotation" class="page">
+
+    <!-- INPUT AREA -->
+
+    <div class="card no-print">
+
+        <h2>New Quotation</h2>
+
+        <label>
+            Customer Name
+        </label>
+
+        <input
+            id="quoteCustomer"
+            value="Goerffery mwangi"
+        >
+
+        <label>
+            Job Type
+        </label>
+
+        <select id="jobType">
+
+            <option>
+                Wardrobe
+            </option>
+
+            <option>
+                Kitchen Cabinets
+            </option>
+
+            <option>
+                TV Unit
+            </option>
+
+            <option>
+                Office Furniture
+            </option>
+
+            <option>
+                Other
+            </option>
+
+        </select>
+
+
+        <h3>
+            Wardrobe Measurements
+        </h3>
+
+
+        <label>
+            Width (mm)
+        </label>
+
+        <input
+            id="width"
+            type="number"
+            value="2400"
+        >
+
+
+        <label>
+            Height (mm)
+        </label>
+
+        <input
+            id="height"
+            type="number"
+            value="2100"
+        >
+
+
+        <label>
+            Depth (mm)
+        </label>
+
+        <input
+            id="depth"
+            type="number"
+            value="600"
+        >
+
+
+        <label>
+            Number of Doors
+        </label>
+
+        <input
+            id="doors"
+            type="number"
+            value="4"
+        >
+
+
+        <label>
+            Number of Drawers
+        </label>
+
+        <input
+            id="drawers"
+            type="number"
+            value="3"
+        >
+
+
+        <label>
+            Material
+        </label>
+
+        <select id="material">
+
+            <option>
+                18mm MDF
+            </option>
+
+            <option>
+                18mm Plywood
+            </option>
+
+            <option>
+                16mm MDF
+            </option>
+
+        </select>
+
+
+        <label>
+            Finish
+        </label>
+
+        <select id="finish">
+
+            <option>
+                Melamine
+            </option>
+
+            <option>
+                Paint
+            </option>
+
+            <option>
+                Veneer
+            </option>
+
+        </select>
+
+
+        <h3>
+            Costs
+        </h3>
+
+
+        <label>
+            Materials (KSh)
+        </label>
+
+        <input
+            id="materials"
+            type="number"
+            value="35000"
+        >
+
+
+        <label>
+            Labour (KSh)
+        </label>
+
+        <input
+            id="labour"
+            type="number"
+            value="12000"
+        >
+
+
+        <label>
+            Transport (KSh)
+        </label>
+
+        <input
+            id="transport"
+            type="number"
+            value="2000"
+        >
+
+
+        <label>
+            Other Costs (KSh)
+        </label>
+
+        <input
+            id="other"
+            type="number"
+            value="1000"
+        >
+
+
+        <label>
+            Discount (KSh)
+        </label>
+
+        <input
+            id="discount"
+            type="number"
+            value="0"
+        >
+
+
+        <button
+            class="primary"
+            onclick="calculateQuotation()"
+        >
+            Calculate Quotation
+        </button>
+
+    </div>
+
+
+    <!-- =================================================
+         THIS IS THE ONLY AREA PRINTED TO PDF
+         ================================================= -->
+
+    <div id="quotationPrint">
+
+        <h2 class="quote-title">
+            PrimeFit ERP
+        </h2>
+
+        <div
+            class="small"
+            style="text-align:center"
+        >
+            Professional Quotation
+        </div>
+
+
+        <div
+            id="quotationSummary"
+            style="margin-top:20px"
+        >
+
+            <h3>
+                Quotation Summary
+            </h3>
+
+            <p>
+                No quotation calculated yet.
+            </p>
+
+        </div>
+
+
+        <div class="quote-actions no-print">
+
+            <button
+                class="secondary"
+                onclick="saveQuotationPDF()"
+            >
+                Print / Save PDF
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+</div>
+
+
+<footer class="no-print">
+    PrimeFit ERP
+</footer>
+
+
+<script>
+
+/* =====================================================
+   PAGE NAVIGATION
+   ===================================================== */
+
+function showPage(pageId) {
+
+    document
+        .querySelectorAll('.page')
+        .forEach(function(page) {
+
+            page.classList.remove('active');
+
+        });
+
+    document
+        .getElementById(pageId)
+        .classList.add('active');
+}
+
+
+/* =====================================================
+   SAVE CUSTOMER
+   ===================================================== */
+
+function saveCustomer() {
+
+    var name =
+        document
+        .getElementById('customerName')
+        .value
+        .trim();
+
+    var message =
+        document.getElementById(
+            'customerMessage'
+        );
+
+    if (!name) {
+
+        message.style.display = 'block';
+
+        message.textContent =
+            'Please enter a customer name.';
+
+        return;
+    }
+
+    document
+        .getElementById('quoteCustomer')
+        .value = name;
+
+    message.style.display = 'block';
+
+    message.textContent =
+        'Customer saved successfully: ' + name;
+}
+
+
+/* =====================================================
+   MONEY FORMAT
+   ===================================================== */
+
+function money(value) {
+
+    return Number(value || 0)
+        .toLocaleString('en-KE');
+}
+
+
+/* =====================================================
+   CALCULATE QUOTATION
+   ===================================================== */
+
+function calculateQuotation() {
+
+    var materials =
+        Number(
+            document
+            .getElementById('materials')
+            .value
+        ) || 0;
+
+    var labour =
+        Number(
+            document
+            .getElementById('labour')
+            .value
+        ) || 0;
+
+    var transport =
+        Number(
+            document
+            .getElementById('transport')
+            .value
+        ) || 0;
+
+    var other =
+        Number(
+            document
+            .getElementById('other')
+            .value
+        ) || 0;
+
+    var discount =
+        Number(
+            document
+            .getElementById('discount')
+            .value
+        ) || 0;
+
+
+    var total =
+        materials +
+        labour +
+        transport +
+        other -
+        discount;
+
+
+    var html =
+
+        '<h3>Quotation Summary</h3>' +
+
+        '<p><strong>Customer:</strong> ' +
+        escapeHtml(
+            document
+            .getElementById('quoteCustomer')
+            .value
+        ) +
+        '</p>' +
+
+        '<p><strong>Job Type:</strong> ' +
+        escapeHtml(
+            document
+            .getElementById('jobType')
+            .value
+        ) +
+        '</p>' +
+
+        '<p>Width: ' +
+        escapeHtml(
+            document
+            .getElementById('width')
+            .value
+        ) +
+        ' mm</p>' +
+
+        '<p>Height: ' +
+        escapeHtml(
+            document
+            .getElementById('height')
+            .value
+        ) +
+        ' mm</p>' +
+
+        '<p>Depth: ' +
+        escapeHtml(
+            document
+            .getElementById('depth')
+            .value
+        ) +
+        ' mm</p>' +
+
+        '<p>Doors: ' +
+        escapeHtml(
+            document
+            .getElementById('doors')
+            .value
+        ) +
+        '</p>' +
+
+        '<p>Drawers: ' +
+        escapeHtml(
+            document
+            .getElementById('drawers')
+            .value
+        ) +
+        '</p>' +
+
+        '<p>Material: ' +
+        escapeHtml(
+            document
+            .getElementById('material')
+            .value
+        ) +
+        '</p>' +
+
+        '<p>Finish: ' +
+        escapeHtml(
+            document
+            .getElementById('finish')
+            .value
+        ) +
+        '</p>' +
+
+
+        '<div class="total-box">' +
+
+        '<div class="cost-row">' +
+        '<span>Materials:</span>' +
+        '<span>KSh ' +
+        money(materials) +
+        '</span>' +
+        '</div>' +
+
+
+        '<div class="cost-row">' +
+        '<span>Labour:</span>' +
+        '<span>KSh ' +
+        money(labour) +
+        '</span>' +
+        '</div>' +
+
+
+        '<div class="cost-row">' +
+        '<span>Transport:</span>' +
+        '<span>KSh ' +
+        money(transport) +
+        '</span>' +
+        '</div>' +
+
+
+        '<div class="cost-row">' +
+        '<span>Other:</span>' +
+        '<span>KSh ' +
+        money(other) +
+        '</span>' +
+        '</div>' +
+
+
+        '<div class="cost-row">' +
+        '<span>Discount:</span>' +
+        '<span>KSh ' +
+        money(discount) +
+        '</span>' +
+        '</div>' +
+
+
+        '<div class="grand-total">' +
+
+        '<span>TOTAL</span>' +
+
+        '<span>KSh ' +
+        money(total) +
+        '</span>' +
+
+        '</div>' +
+
+        '</div>';
+
+
+    document
+        .getElementById(
+            'quotationSummary'
+        )
+        .innerHTML = html;
+}
+
+
+/* =====================================================
+   SECURITY AGAINST HTML BREAKING
+   ===================================================== */
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replace(
+            /[&<>"']/g,
+            function(character) {
+
+                return {
+
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+
+                }[character];
+
+            }
+        );
+}
+
+
+/* =====================================================
+   FIXED PRINT / SAVE PDF FUNCTION
+   ===================================================== */
+
+function saveQuotationPDF() {
+
+    var summary =
+        document.getElementById(
+            'quotationSummary'
+        );
+
+
+    /*
+       If the user presses Print before
+       calculating, calculate it first.
+    */
+
+    if (
+        !summary ||
+        summary.textContent
+        .indexOf(
+            'No quotation calculated yet.'
+        ) !== -1
+    ) {
+
+        calculateQuotation();
+
+    }
+
+
+    /*
+       Give the browser a moment to finish
+       rendering the quotation before opening
+       the Android print / Save as PDF screen.
+    */
+
+    setTimeout(function() {
+
+        window.print();
+
+    }, 200);
+
+}
+
+
+/* =====================================================
+   INITIAL QUOTATION
+   ===================================================== */
+
+calculateQuotation();
+
+</script>
+
+</body>
+</html>
