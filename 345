@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrimeFit ERP</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f7f5;
+    color: #222;
+}
+
+header {
+    background: #087f3f;
+    color: white;
+    padding: 18px 15px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+nav {
+    display: flex;
+    background: white;
+    border-bottom: 1px solid #ddd;
+}
+
+nav button {
+    flex: 1;
+    border: none;
+    background: white;
+    padding: 14px 5px;
+    font-weight: bold;
+    color: #087f3f;
+    cursor: pointer;
+}
+
+.container {
+    padding: 15px;
+    max-width: 700px;
+    margin: auto;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.card {
+    background: white;
+    padding: 18px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.card h2 {
+    margin-top: 0;
+    color: #087f3f;
+}
+
+label {
+    display: block;
+    margin-top: 12px;
+    font-weight: bold;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 11px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+button.primary {
+    width: 100%;
+    margin-top: 15px;
+    padding: 13px;
+    border: none;
+    border-radius: 7px;
+    background: #087f3f;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button.secondary {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    border: 1px solid #087f3f;
+    border-radius: 7px;
+    background: white;
+    color: #087f3f;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.result {
+    margin-top: 15px;
+    padding: 15px;
+    background: #eef8f1;
+    border-radius: 8px;
+}
+
+#quotationPrint {
+    background: white;
+    padding: 20px;
+}
+
+.quote-title {
+    text-align: center;
+    margin: 0 0 5px;
+}
+
+.small {
+    color: #555;
+    font-size: 13px;
+}
+
+.total-box {
+    margin-top: 18px;
+    border: 1px solid #ccc;
+    padding: 14px;
+}
+
+.cost-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.grand-total {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 2px solid #123c2a;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    color: #777;
+    font-size: 12px;
+}
+
+.pdf-status {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 7px;
+    display: none;
+    text-align: center;
+    font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>PrimeFit ERP</h1>
+    <div>Quotation & Customer Management</div>
+</header>
+
+<nav>
+    <button onclick="showPage('dashboard')">
+        Dashboard
+    </button>
+
+    <button onclick="showPage('customer')">
+        Customer
+    </button>
+
+    <button onclick="showPage('quotation')">
+        Quotation
+    </button>
+</nav>
+
+<div class="container">
+
+<section id="dashboard" class="page active">
+
+    <div class="card">
+
+        <h2>Welcome to PrimeFit ERP</h2>
+
+        <p>
+            Manage your quotations, customers and projects
+            from one place.
+        </p>
+
+        <p>🧮 Measurement-based quotation calculations</p>
+        <p>📋 Professional quotations</p>
+        <p>👥 Customer management</p>
+        <p>📄 Save quotations as PDF</p>
+        <p>💾 Works offline except for the PDF library</p>
+        <p>🔐 Business data security</p>
+
+    </div>
+
+</section>
+
+
+<section id="customer" class="page">
+
+    <div class="card">
+
+        <h2>Customers</h2>
+
+        <label>Customer Name</label>
+
+        <input
+            id="customerName"
+            value="Goerffery mwangi"
+        >
+
+        <label>Phone</label>
+
+        <input
+            id="customerPhone"
+            value="0795692797"
+        >
+
+        <label>Email</label>
+
+        <input
+            id="customerEmail"
+            value="goefferymwangi44@gmail.com"
+        >
+
+        <label>KRA PIN</label>
+
+        <input
+            id="kraPin"
+            value="Trf"
+        >
+
+        <button
+            class="primary"
+            onclick="saveCustomer()"
+        >
+            Save Customer
+        </button>
+
+        <div
+            id="customerMessage"
+            class="result"
+            style="display:none"
+        ></div>
+
+    </div>
+
+</section>
+
+
+<section id="quotation" class="page">
+
+    <div class="card">
+
+        <h2>New Quotation</h2>
+
+        <label>Customer Name</label>
+
+        <input
+            id="quoteCustomer"
+            value="Goerffery mwangi"
+        >
+
+        <label>Job Type</label>
+
+        <select id="jobType">
+
+            <option>Wardrobe</option>
+            <option>Kitchen Cabinets</option>
+            <option>TV Unit</option>
+            <option>Office Furniture</option>
+            <option>Other</option>
+
+        </select>
+
+
+        <h3>Wardrobe Measurements</h3>
+
+        <label>Width (mm)</label>
+
+        <input
+            id="width"
+            type="number"
+            value="2400"
+        >
+
+        <label>Height (mm)</label>
+
+        <input
+            id="height"
+            type="number"
+            value="2100"
+        >
+
+        <label>Depth (mm)</label>
+
+        <input
+            id="depth"
+            type="number"
+            value="600"
+        >
+
+        <label>Number of Doors</label>
+
+        <input
+            id="doors"
+            type="number"
+            value="4"
+        >
+
+        <label>Number of Drawers</label>
+
+        <input
+            id="drawers"
+            type="number"
+            value="3"
+        >
+
+        <label>Material</label>
+
+        <select id="material">
+
+            <option>18mm MDF</option>
+            <option>18mm Plywood</option>
+            <option>16mm MDF</option>
+
+        </select>
+
+        <label>Finish</label>
+
+        <select id="finish">
+
+            <option>Melamine</option>
+            <option>Paint</option>
+            <option>Veneer</option>
+
+        </select>
+
+
+        <h3>Costs</h3>
+
+        <label>Materials (KSh)</label>
+
+        <input
+            id="materials"
+            type="number"
+            value="35000"
+        >
+
+        <label>Labour (KSh)</label>
+
+        <input
+            id="labour"
+            type="number"
+            value="12000"
+        >
+
+        <label>Transport (KSh)</label>
+
+        <input
+            id="transport"
+            type="number"
+            value="2000"
+        >
+
+        <label>Other Costs (KSh)</label>
+
+        <input
+            id="other"
+            type="number"
+            value="1000"
+        >
+
+        <label>Discount (KSh)</label>
+
+        <input
+            id="discount"
+            type="number"
+            value="0"
+        >
+
+
+        <button
+            class="primary"
+            onclick="calculateQuotation()"
+        >
+            Calculate Quotation
+        </button>
+
+
+        <button
+            class="secondary"
+            onclick="downloadQuotationPDF()"
+        >
+            Download Quotation PDF
+        </button>
+
+
+        <div
+            id="pdfStatus"
+            class="pdf-status"
+        ></div>
+
+    </div>
+
+
+    <div id="quotationPrint">
+
+        <h2 class="quote-title">
+            PrimeFit ERP
+        </h2>
+
+        <div
+            class="small"
+            style="text-align:center"
+        >
+            Professional Quotation
+        </div>
+
+        <div
+            id="quotationSummary"
+            style="margin-top:20px"
+        >
+
+            <h3>Quotation Summary</h3>
+
+            <p>
+                No quotation calculated yet.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+</div>
+
+
+<footer>
+    PrimeFit ERP
+</footer>
+
+
+<!-- PDF LIBRARY -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
+<script>
+
+/* ================================
+   PAGE NAVIGATION
+================================ */
+
+function showPage(pageId) {
+
+    document
+        .querySelectorAll('.page')
+        .forEach(function(page) {
+
+            page.classList.remove('active');
+
+        });
+
+    document
+        .getElementById(pageId)
+        .classList.add('active');
+}
+
+
+/* ================================
+   SAVE CUSTOMER
+================================ */
+
+function saveCustomer() {
+
+    var name =
+        document
+        .getElementById('customerName')
+        .value
+        .trim();
+
+    var message =
+        document.getElementById(
+            'customerMessage'
+        );
+
+    if (!name) {
+
+        message.style.display = 'block';
+
+        message.textContent =
+            'Please enter a customer name.';
+
+        return;
+    }
+
+    document
+        .getElementById('quoteCustomer')
+        .value = name;
+
+    message.style.display = 'block';
+
+    message.textContent =
+        'Customer saved successfully: ' + name;
+}
+
+
+/* ================================
+   MONEY
+================================ */
+
+function money(value) {
+
+    return Number(value || 0)
+        .toLocaleString('en-KE');
+}
+
+
+/* ================================
+   GET QUOTATION DATA
+================================ */
+
+function getQuotationData() {
+
+    var materials =
+        Number(
+            document
+            .getElementById('materials')
+            .value
+        ) || 0;
+
+    var labour =
+        Number(
+            document
+            .getElementById('labour')
+            .value
+        ) || 0;
+
+    var transport =
+        Number(
+            document
+            .getElementById('transport')
+            .value
+        ) || 0;
+
+    var other =
+        Number(
+            document
+            .getElementById('other')
+            .value
+        ) || 0;
+
+    var discount =
+        Number(
+            document
+            .getElementById('discount')
+            .value
+        ) || 0;
+
+    var total =
+        materials +
+        labour +
+        transport +
+        other -
+        discount;
+
+    return {
+
+        customer:
+            document
+            .getElementById('quoteCustomer')
+            .value,
+
+        jobType:
+            document
+            .getElementById('jobType')
+            .value,
+
+        width:
+            document
+            .getElementById('width')
+            .value,
+
+        height:
+            document
+            .getElementById('height')
+            .value,
+
+        depth:
+            document
+            .getElementById('depth')
+            .value,
+
+        doors:
+            document
+            .getElementById('doors')
+            .value,
+
+        drawers:
+            document
+            .getElementById('drawers')
+            .value,
+
+        material:
+            document
+            .getElementById('material')
+            .value,
+
+        finish:
+            document
+            .getElementById('finish')
+            .value,
+
+        materials: materials,
+
+        labour: labour,
+
+        transport: transport,
+
+        other: other,
+
+        discount: discount,
+
+        total: total
+    };
+}
+
+
+/* ================================
+   CALCULATE QUOTATION
+================================ */
+
+function calculateQuotation() {
+
+    var q = getQuotationData();
+
+    var html =
+
+        '<h3>Quotation Summary</h3>' +
+
+        '<p><strong>Customer:</strong> ' +
+        escapeHtml(q.customer) +
+        '</p>' +
+
+        '<p><strong>Job Type:</strong> ' +
+        escapeHtml(q.jobType) +
+        '</p>' +
+
+        '<p>Width: ' +
+        escapeHtml(q.width) +
+        ' mm</p>' +
+
+        '<p>Height: ' +
+        escapeHtml(q.height) +
+        ' mm</p>' +
+
+        '<p>Depth: ' +
+        escapeHtml(q.depth) +
+        ' mm</p>' +
+
+        '<p>Doors: ' +
+        escapeHtml(q.doors) +
+        '</p>' +
+
+        '<p>Drawers: ' +
+        escapeHtml(q.drawers) +
+        '</p>' +
+
+        '<p>Material: ' +
+        escapeHtml(q.material) +
+        '</p>' +
+
+        '<p>Finish: ' +
+        escapeHtml(q.finish) +
+        '</p>' +
+
+        '<div class="total-box">' +
+
+        '<div class="cost-row">' +
+        '<span>Materials:</span>' +
+        '<span>KSh ' +
+        money(q.materials) +
+        '</span>' +
+        '</div>' +
+
+        '<div class="cost-row">' +
+        '<span>Labour:</span>' +
+        '<span>KSh ' +
+        money(q.labour) +
+        '</span>' +
+        '</div>' +
+
+        '<div class="cost-row">' +
+        '<span>Transport:</span>' +
+        '<span>KSh ' +
+        money(q.transport) +
+        '</span>' +
+        '</div>' +
+
+        '<div class="cost-row">' +
+        '<span>Other Costs:</span>' +
+        '<span>KSh ' +
+        money(q.other) +
+        '</span>' +
+        '</div>' +
+
+        '<div class="cost-row">' +
+        '<span>Discount:</span>' +
+        '<span>KSh ' +
+        money(q.discount) +
+        '</span>' +
+        '</div>' +
+
+        '<div class="grand-total">' +
+
+        '<span>TOTAL</span>' +
+
+        '<span>KSh ' +
+        money(q.total) +
+        '</span>' +
+
+        '</div>' +
+
+        '</div>';
+
+
+    document
+        .getElementById(
+            'quotationSummary'
+        )
+        .innerHTML = html;
+}
+
+
+/* ================================
+   HTML SAFETY
+================================ */
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replace(
+            /[&<>"']/g,
+            function(character) {
+
+                return {
+
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+
+                }[character];
+
+            }
+        );
+}
+
+
+/* =================================================
+   DIRECT PDF GENERATION
+   =================================================
+
+   IMPORTANT:
+
+   This does NOT use:
+
+       window.print()
+
+   This does NOT use:
+
+       document.write()
+
+   This does NOT copy quotation.innerHTML
+   into another HTML page.
+
+   It creates the PDF directly.
+================================================= */
+
+function downloadQuotationPDF() {
+
+    var status =
+        document.getElementById(
+            'pdfStatus'
+        );
+
+
+    /* Check that jsPDF has loaded */
+
+    if (
+        typeof window.jspdf === 'undefined' ||
+        !window.jspdf.jsPDF
+    ) {
+
+        status.style.display = 'block';
+
+        status.textContent =
+            'PDF system is still loading. Please wait a moment and try again.';
+
+        return;
+    }
+
+
+    /* Get current quotation */
+
+    var q =
+        getQuotationData();
+
+
+    /* Update quotation shown on screen */
+
+    calculateQuotation();
+
+
+    /* Create a completely NEW PDF */
+
+    var jsPDF =
+        window.jspdf.jsPDF;
+
+
+    var doc =
+        new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
+        });
+
+
+    var pageWidth =
+        doc.internal.pageSize.getWidth();
+
+    var margin = 18;
+
+    var y = 22;
+
+
+    /* =========================
+       PDF HEADER
+    ========================= */
+
+    doc.setFont(
+        'helvetica',
+        'bold'
+    );
+
+    doc.setFontSize(22);
+
+    doc.text(
+        'PrimeFit ERP',
+        pageWidth / 2,
+        y,
+        {
+            align: 'center'
+        }
+    );
+
+
+    y += 8;
+
+
+    doc.setFont(
+        'helvetica',
+        'normal'
+    );
+
+    doc.setFontSize(10);
+
+    doc.text(
+        'Professional Quotation',
+        pageWidth / 2,
+        y,
+        {
+            align: 'center'
+        }
+    );
+
+
+    y += 12;
+
+
+    /* =========================
+       QUOTATION SUMMARY
+    ========================= */
+
+    doc.setFont(
+        'helvetica',
+        'bold'
+    );
+
+    doc.setFontSize(12);
+
+    doc.text(
+        'QUOTATION SUMMARY',
+        margin,
+        y
+    );
+
+
+    y += 8;
+
+
+    doc.setFont(
+        'helvetica',
+        'normal'
+    );
+
+    doc.setFontSize(10);
+
+
+    function addLine(label, value) {
+
+        doc.setFont(
+            'helvetica',
+            'bold'
+        );
+
+        doc.text(
+            label,
+            margin,
+            y
+        );
+
+
+        doc.setFont(
+            'helvetica',
+            'normal'
+        );
+
+        doc.text(
+            String(value),
+            margin + 38,
+            y
+        );
+
+
+        y += 6;
+    }
+
+
+    addLine(
+        'Customer:',
+        q.customer
+    );
+
+
+    addLine(
+        'Job Type:',
+        q.jobType
+    );
+
+
+    y += 3;
+
+
+    /* =========================
+       MEASUREMENTS
+    ========================= */
+
+    doc.setFont(
+        'helvetica',
+        'bold'
+    );
+
+    doc.setFontSize(12);
+
+    doc.text(
+        'MEASUREMENTS',
+        margin,
+        y
+    );
+
+
+    y += 7;
+
+
+    doc.setFont(
+        'helvetica',
+        'normal'
+    );
+
+    doc.setFontSize(10);
+
+
+    addLine(
+        'Width:',
+        q.width + ' mm'
+    );
+
+
+    addLine(
+        'Height:',
+        q.height + ' mm'
+    );
+
+
+    addLine(
+        'Depth:',
+        q.depth + ' mm'
+    );
+
+
+    addLine(
+        'Doors:',
+        q.doors
+    );
+
+
+    addLine(
+        'Drawers:',
+        q.drawers
+    );
+
+
+    addLine(
+        'Material:',
+        q.material
+    );
+
+
+    addLine(
+        'Finish:',
+        q.finish
+    );
+
+
+    y += 3;
+
+
+    /* =========================
+       COSTS
+    ========================= */
+
+    doc.setFont(
+        'helvetica',
+        'bold'
+    );
+
+    doc.setFontSize(12);
+
+    doc.text(
+        'COSTS',
+        margin,
+        y
+    );
+
+
+    y += 8;
+
+
+    var amountX =
+        pageWidth - margin;
+
+
+    doc.setFont(
+        'helvetica',
+        'bold'
+    );
+
+    doc.setFontSize(10);
+
+
+    doc.line(
+        margin,
+        y - 3,
+        pageWidth - margin,
+        y - 3
+    );
+
+
+    doc.text(
+        'Description',
+        margin,
+        y
+    );
+
+
+    doc.text(
+        'Amount (KSh)',
+        amountX,
+        y,
+        {
+            align: 'right'
+        }
+    );
+
+
+    y += 5;
+
+
+    doc.line(
+        margin,
+        y,
+        pageWidth - margin,
+        y
+    );
+
+
+    y += 7;
+
+
+    function addCostRow(
+        label,
+        value
+    ) {
+
+        doc.setFont(
+            'helvetica',
+            'normal'
+        );
+
+        doc.text(
+            label,
+            margin,
+            y
+        );
+
+
+        doc.text(
+            money(value),
+            amountX,
+            y,
+            {
+                align: 'right'
+            }
+        );
+
+
+        y += 7;
+
+
+        doc.line(
+            margin,
+            y - 3,
+            pageWidth - margin,
+            y - 3
+        );
+    }
+
+
+    addCostRow(
+        'Materials',
+        q.materials
+    );
+
+
+    addCostRow(
+        'Labour',
+        q.labour
+    );
+
+
+    addCostRow(
+        'Transport',
+        q.transport
+    );
+
+
+    addCostRow(
+        'Other Costs',
+        q.other
+    );
+
+
+    addCostRow(
+        'Discount',
+        q.discount
+    );
+
+
+    y += 4;
+
+
+    /* =========================
+       GRAND TOTAL
+    ========================= */
+
+    doc.setFont(
+        'helvetica',
+        'bold'
+    );
+
+    doc.setFontSize(15);
+
+
+    doc.text(
+        'TOTAL',
+        margin,
+        y
+    );
+
+
+    doc.text(
+        'KSh ' + money(q.total),
+        amountX,
+        y,
+        {
+            align: 'right'
+        }
+    );
+
+
+    /* =========================
+       PDF FOOTER
+    ========================= */
+
+    doc.setFont(
+        'helvetica',
+        'normal'
+    );
+
+    doc.setFontSize(9);
+
+
+    doc.text(
+        'PrimeFit ERP - Professional Quotation',
+        pageWidth / 2,
+        285,
+        {
+            align: 'center'
+        }
+    );
+
+
+    /* =========================
+       SAVE PDF
+    ========================= */
+
+    var safeCustomer =
+        String(
+            q.customer || 'Customer'
+        )
+        .replace(
+            /[^a-z0-9]/gi,
+            '_'
+        )
+        .substring(
+            0,
+            40
+        );
+
+
+    var fileName =
+        'PrimeFit_Quotation_' +
+        safeCustomer +
+        '.pdf';
+
+
+    doc.save(
+        fileName
+    );
+
+
+    status.style.display =
+        'block';
+
+
+    status.textContent =
+        'PDF created successfully: ' +
+        fileName;
+}
+
+
+/* ================================
+   INITIAL CALCULATION
+================================ */
+
+calculateQuotation();
+
+</script>
+
+</body>
+</html>
