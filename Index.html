@@ -1,0 +1,2516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrimeFit ERP - Kitchen Quotation Test</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#eef2f6;
+    color:#172235;
+}
+
+button,input,select,textarea{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.app{
+    min-height:100vh;
+    display:flex;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    width:205px;
+    background:#0d1c2d;
+    color:#fff;
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+    padding-bottom:15px;
+    overflow:auto;
+}
+
+.logo{
+    padding:18px 16px 20px;
+    border-bottom:1px solid #26364a;
+}
+
+.logo strong{
+    font-size:26px;
+}
+
+.logo strong span{
+    color:#ef1724;
+}
+
+.logo small{
+    display:block;
+    color:#d5dce5;
+    margin-top:3px;
+}
+
+.nav{
+    padding:12px 0;
+}
+
+.nav button{
+    width:100%;
+    border:0;
+    background:none;
+    color:#fff;
+    text-align:left;
+    padding:14px 20px;
+    font-weight:bold;
+}
+
+.nav button:hover,
+.nav button.active{
+    background:#ed1724;
+}
+
+.brand-bottom{
+    position:absolute;
+    bottom:15px;
+    left:15px;
+    right:15px;
+    border-top:1px solid #314055;
+    padding-top:14px;
+}
+
+.brand-bottom strong{
+    font-size:20px;
+}
+
+.brand-bottom span{
+    color:#ef1724;
+}
+
+/* MAIN */
+
+.main{
+    margin-left:205px;
+    width:calc(100% - 205px);
+    min-height:100vh;
+}
+
+.topbar{
+    height:76px;
+    background:#14283e;
+    color:#fff;
+    padding:17px 28px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.topbar h1{
+    font-size:25px;
+    margin:0;
+}
+
+.topbar p{
+    margin:5px 0 0;
+    color:#cbd6e2;
+    font-size:13px;
+}
+
+.user{
+    font-weight:bold;
+}
+
+.content{
+    padding:18px;
+    max-width:1600px;
+    margin:auto;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 345px;
+    gap:15px;
+}
+
+.card{
+    background:#fff;
+    border:1px solid #d7e0ea;
+    border-radius:8px;
+    box-shadow:0 2px 8px #0000000a;
+}
+
+.card-head{
+    padding:14px 17px;
+    border-bottom:1px solid #e1e7ee;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.card-head h2{
+    margin:0;
+    font-size:19px;
+}
+
+.card-head .red{
+    color:#ed1724;
+}
+
+/* CLIENT */
+
+.client{
+    padding:14px 17px;
+}
+
+.fields{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+}
+
+.field label{
+    display:block;
+    font-size:12px;
+    font-weight:bold;
+    color:#536274;
+    margin-bottom:5px;
+}
+
+.field input,
+.field select,
+.field textarea{
+    width:100%;
+    border:1px solid #ccd6e1;
+    border-radius:5px;
+    padding:9px;
+    background:#fff;
+}
+
+.field textarea{
+    min-height:90px;
+    resize:vertical;
+}
+
+/* SEARCH */
+
+.searchbar{
+    padding:12px 17px 7px;
+}
+
+.searchbar input{
+    width:100%;
+    padding:11px;
+    border:1px solid #cbd5df;
+    border-radius:6px;
+}
+
+.categories{
+    display:flex;
+    gap:7px;
+    overflow-x:auto;
+    padding:7px 17px 12px;
+}
+
+.categories button{
+    white-space:nowrap;
+    border:1px solid #d0dae5;
+    background:#f7f9fb;
+    border-radius:5px;
+    padding:8px 11px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.categories button.active{
+    background:#ed1724;
+    color:#fff;
+    border-color:#ed1724;
+}
+
+/* MATERIALS */
+
+.material-grid{
+    display:grid;
+    grid-template-columns:repeat(5,minmax(130px,1fr));
+    gap:9px;
+    padding:0 17px 16px;
+}
+
+.material{
+    border:1px solid #d5dfe9;
+    border-radius:7px;
+    padding:7px;
+    background:#fff;
+    transition:.15s;
+}
+
+.material:hover{
+    box-shadow:0 3px 10px #00000018;
+    transform:translateY(-1px);
+}
+
+.material img{
+    width:100%;
+    height:92px;
+    object-fit:cover;
+    border-radius:5px;
+    background:#eee;
+}
+
+.material h3{
+    font-size:13px;
+    margin:7px 0 3px;
+}
+
+.spec{
+    font-size:11px;
+    color:#667589;
+    height:28px;
+}
+
+.price{
+    font-weight:bold;
+    font-size:12px;
+    margin:4px 0 7px;
+}
+
+.add{
+    width:100%;
+    border:0;
+    border-radius:5px;
+    background:#ed1724;
+    color:#fff;
+    padding:7px;
+    font-weight:bold;
+}
+
+/* SELECTED TABLE */
+
+.selected{
+    margin-top:15px;
+}
+
+.table-wrap{
+    overflow:auto;
+    padding:0 10px 10px;
+}
+
+table{
+    border-collapse:collapse;
+    width:100%;
+    font-size:12px;
+}
+
+th{
+    background:#f2f6fa;
+    color:#455568;
+    text-align:left;
+    padding:8px;
+    border-bottom:1px solid #d6e0e9;
+}
+
+td{
+    padding:7px;
+    border-bottom:1px solid #e6ebf0;
+    vertical-align:middle;
+}
+
+.thumb{
+    width:42px;
+    height:34px;
+    object-fit:cover;
+    border-radius:4px;
+}
+
+.qty,
+.unit,
+.unitprice{
+    width:82px;
+    padding:6px;
+    border:1px solid #cbd6e1;
+    border-radius:4px;
+}
+
+.remove{
+    border:0;
+    background:#ef1724;
+    color:#fff;
+    border-radius:4px;
+    padding:5px 8px;
+}
+
+.empty{
+    padding:25px;
+    text-align:center;
+    color:#738093;
+}
+
+/* SUMMARY */
+
+.summary{
+    position:sticky;
+    top:15px;
+}
+
+.summary-body{
+    padding:15px;
+}
+
+.sumrow{
+    display:flex;
+    justify-content:space-between;
+    padding:8px 0;
+    font-size:14px;
+}
+
+.total{
+    background:#ed1724;
+    color:#fff;
+    border-radius:6px;
+    padding:13px;
+    margin:8px 0 13px;
+    font-weight:bold;
+    font-size:17px;
+}
+
+.info{
+    border:1px solid #bdd8f5;
+    background:#eef7ff;
+    border-radius:6px;
+    padding:12px;
+    margin:9px 0;
+}
+
+.status{
+    border:1px solid #a9dfc0;
+    background:#effbf4;
+    color:#11733b;
+    border-radius:6px;
+    padding:12px;
+    margin:9px 0;
+}
+
+.action{
+    width:100%;
+    padding:11px;
+    border-radius:5px;
+    margin-top:8px;
+    font-weight:bold;
+    border:1px solid #cbd6e0;
+    background:#fff;
+    color:#172235;
+}
+
+.action.primary{
+    background:#ed1724;
+    color:#fff;
+    border-color:#ed1724;
+}
+
+.action.dark{
+    background:#17304a;
+    color:#fff;
+    border-color:#17304a;
+}
+
+.notes{
+    margin-top:15px;
+}
+
+.notes textarea{
+    width:100%;
+    padding:10px;
+    border:1px solid #ccd6e1;
+    border-radius:5px;
+    min-height:110px;
+}
+
+/* MODAL */
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:#0008;
+    align-items:center;
+    justify-content:center;
+    padding:15px;
+    z-index:20;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-box{
+    background:#fff;
+    width:min(500px,100%);
+    border-radius:8px;
+    padding:20px;
+}
+
+.modal-box h2{
+    margin-top:0;
+}
+
+.modal-actions{
+    display:flex;
+    gap:8px;
+    justify-content:flex-end;
+    margin-top:15px;
+}
+
+/* TOAST */
+
+.toast{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    background:#14283e;
+    color:#fff;
+    padding:12px 16px;
+    border-radius:6px;
+    display:none;
+    z-index:30;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1150px){
+
+    .material-grid{
+        grid-template-columns:repeat(4,1fr);
+    }
+
+    .fields{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:850px){
+
+    .sidebar{
+        width:70px;
+    }
+
+    .sidebar .logo strong,
+    .sidebar .logo small,
+    .nav button span,
+    .brand-bottom{
+        display:none;
+    }
+
+    .nav button{
+        text-align:center;
+        padding:15px 5px;
+    }
+
+    .main{
+        margin-left:70px;
+        width:calc(100% - 70px);
+    }
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    .summary{
+        position:static;
+    }
+
+    .material-grid{
+        grid-template-columns:repeat(3,1fr);
+    }
+}
+
+@media(max-width:560px){
+
+    .topbar{
+        padding:13px 14px;
+        height:auto;
+    }
+
+    .topbar h1{
+        font-size:18px;
+    }
+
+    .content{
+        padding:9px;
+    }
+
+    .material-grid{
+        grid-template-columns:repeat(2,1fr);
+        padding:0 10px 12px;
+    }
+
+    .categories,
+    .searchbar,
+    .client{
+        padding-left:10px;
+        padding-right:10px;
+    }
+
+    .fields{
+        grid-template-columns:1fr;
+    }
+
+    .card-head{
+        padding:12px;
+    }
+
+    .material img{
+        height:80px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+        <strong>Prime<span>Fit</span></strong>
+        <small>Interior Solutions</small>
+    </div>
+
+    <div class="nav">
+
+        <button>
+            ⌂ <span>Dashboard</span>
+        </button>
+
+        <button>
+            ♟ <span>Clients</span>
+        </button>
+
+        <button class="active">
+            ▣ <span>Materials</span>
+        </button>
+
+        <button class="active">
+            ▦ <span>Kitchen</span>
+        </button>
+
+        <button>
+            ▦ <span>Wardrobe</span>
+        </button>
+
+        <button>
+            ▤ <span>Doors & Panels</span>
+        </button>
+
+        <button>
+            ▤ <span>Reports</span>
+        </button>
+
+        <button>
+            ⚙ <span>Settings</span>
+        </button>
+
+    </div>
+
+    <div class="brand-bottom">
+        <strong>Prime<span>Fit</span></strong>
+        <br>
+        <small>Build Better • Live Better</small>
+    </div>
+
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="main">
+
+<header class="topbar">
+
+    <div>
+        <h1>Quotation & Materials System</h1>
+        <p>
+            Kitchen • Materials • Accurate Pricing • Professional Quotation
+        </p>
+    </div>
+
+    <div class="user">
+        ● &nbsp; Admin
+    </div>
+
+</header>
+
+
+<div class="content">
+
+<div class="grid">
+
+<section>
+
+<!-- KITCHEN MATERIALS -->
+
+<div class="card">
+
+    <div class="card-head">
+
+        <h2>
+            ▦
+            <span class="red">
+                Kitchen Materials
+            </span>
+        </h2>
+
+        <button
+            class="action"
+            style="width:auto;margin:0"
+            onclick="openCustom()"
+        >
+            + Add Material
+        </button>
+
+    </div>
+
+
+    <div class="searchbar">
+
+        <input
+            id="search"
+            placeholder="Search kitchen materials..."
+            oninput="renderMaterials()"
+        >
+
+    </div>
+
+
+    <div
+        class="categories"
+        id="categories"
+    ></div>
+
+
+    <div
+        class="material-grid"
+        id="materialGrid"
+    ></div>
+
+</div>
+
+
+<!-- SELECTED MATERIALS -->
+
+<div class="card selected">
+
+    <div class="card-head">
+
+        <h2>
+            🛒 Selected Kitchen Materials
+        </h2>
+
+        <button
+            class="action"
+            style="width:auto;margin:0"
+            onclick="clearMaterials()"
+        >
+            Clear All
+        </button>
+
+    </div>
+
+
+    <div class="table-wrap">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>#</th>
+                    <th>Image</th>
+                    <th>Material</th>
+                    <th>Specification</th>
+                    <th>Unit</th>
+                    <th>Qty</th>
+                    <th>Unit Price (KSh)</th>
+                    <th>Total</th>
+                    <th>Action</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="selectedBody"></tbody>
+
+        </table>
+
+
+        <div
+            id="empty"
+            class="empty"
+        >
+            Press <b>Add</b> on the kitchen materials above to add items to this quotation.
+        </div>
+
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- RIGHT SIDE -->
+
+<aside class="summary">
+
+<div class="card">
+
+    <div class="card-head">
+
+        <h2>
+            ▤ Quotation Details
+        </h2>
+
+    </div>
+
+
+    <div class="client">
+
+        <div
+            class="fields"
+            style="grid-template-columns:1fr"
+        >
+
+            <div class="field">
+
+                <label>
+                    Client Name
+                </label>
+
+                <input
+                    id="clientName"
+                    placeholder="Enter client name"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Phone
+                </label>
+
+                <input
+                    id="clientPhone"
+                    placeholder="Phone number"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Email
+                </label>
+
+                <input
+                    id="clientEmail"
+                    placeholder="Email"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Quotation Number
+                </label>
+
+                <input id="quoteNo">
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Date
+                </label>
+
+                <input
+                    id="quoteDate"
+                    type="date"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Validity
+                </label>
+
+                <select
+                    id="validity"
+                    onchange="updateValidity()"
+                >
+
+                    <option value="15">
+                        15 days
+                    </option>
+
+                    <option value="7">
+                        7 days
+                    </option>
+
+                    <option value="30">
+                        30 days
+                    </option>
+
+                    <option value="60">
+                        60 days
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="summary-body">
+
+        <div class="sumrow">
+
+            <span>
+                Subtotal
+            </span>
+
+            <b id="subtotal">
+                KSh 0.00
+            </b>
+
+        </div>
+
+
+        <div class="sumrow">
+
+            <span>
+                VAT / Tax (15%)
+            </span>
+
+            <b id="vat">
+                KSh 0.00
+            </b>
+
+        </div>
+
+
+        <div class="total">
+
+            <span>
+                Total Amount
+            </span>
+
+            <span
+                style="float:right"
+                id="grand"
+            >
+                KSh 0.00
+            </span>
+
+        </div>
+
+
+        <div class="info">
+
+            <b>
+                Validity
+            </b>
+
+            <br>
+
+            <span id="validUntil"></span>
+
+        </div>
+
+
+        <div class="status">
+
+            <b>
+                Status
+            </b>
+
+            <br>
+
+            <span id="status">
+                Valid
+            </span>
+
+        </div>
+
+
+        <button
+            class="action primary"
+            onclick="generatePDF()"
+        >
+            ▤ Generate Quotation PDF
+        </button>
+
+
+        <button
+            class="action dark"
+            onclick="downloadPDF()"
+        >
+            ⇩ Download PDF
+        </button>
+
+
+        <button
+            class="action"
+            onclick="openPDF()"
+        >
+            ↗ Open PDF
+        </button>
+
+
+        <button
+            class="action"
+            onclick="saveAgain()"
+        >
+            ▣ Save PDF Again
+        </button>
+
+
+        <button
+            class="action"
+            onclick="newQuotation()"
+        >
+            ＋ New Quotation
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- NOTES -->
+
+<div class="card notes">
+
+    <div class="card-head">
+
+        <h2>
+            Quotation Notes
+        </h2>
+
+    </div>
+
+
+    <div style="padding:12px">
+
+        <textarea id="notes">Thank you for your business.
+This quotation is valid for 15 days from the date of issue.</textarea>
+
+    </div>
+
+</div>
+
+</aside>
+
+</div>
+
+</div>
+
+</main>
+
+</div>
+
+
+<!-- CUSTOM MATERIAL MODAL -->
+
+<div
+    class="modal"
+    id="modal"
+>
+
+<div class="modal-box">
+
+    <h2>
+        Add Custom Kitchen Material
+    </h2>
+
+
+    <div class="field">
+
+        <label>
+            Material Name
+        </label>
+
+        <input
+            id="mName"
+            placeholder="e.g. Kitchen Basket"
+        >
+
+    </div>
+
+    <br>
+
+
+    <div class="fields">
+
+        <div class="field">
+
+            <label>
+                Category
+            </label>
+
+            <select id="mCat">
+
+                <option>
+                    Boards & Wood
+                </option>
+
+                <option>
+                    Granite & Stone
+                </option>
+
+                <option>
+                    Sinks
+                </option>
+
+                <option>
+                    Taps & Fittings
+                </option>
+
+                <option>
+                    Hardware
+                </option>
+
+                <option>
+                    Handles
+                </option>
+
+                <option>
+                    Appliances
+                </option>
+
+                <option>
+                    Plumbing
+                </option>
+
+                <option>
+                    Electrical
+                </option>
+
+                <option>
+                    Paint & Finishes
+                </option>
+
+                <option>
+                    Others
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Specification
+            </label>
+
+            <input
+                id="mSpec"
+                placeholder="Size / type"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Unit
+            </label>
+
+            <input
+                id="mUnit"
+                value="Piece"
+            >
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Unit Price
+            </label>
+
+            <input
+                id="mPrice"
+                type="number"
+                value="0"
+            >
+
+        </div>
+
+    </div>
+
+
+    <div class="modal-actions">
+
+        <button
+            class="action"
+            onclick="closeCustom()"
+        >
+            Cancel
+        </button>
+
+
+        <button
+            class="action primary"
+            onclick="addCustom()"
+        >
+            Add Material
+        </button>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<div
+    class="toast"
+    id="toast"
+></div>
+
+
+<!-- PDF LIBRARY -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
+<script>
+
+/* =========================================
+   MATERIAL IMAGE SOURCES
+========================================= */
+
+const image = {
+
+    board:
+    "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=500&q=80",
+
+    wood:
+    "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?auto=format&fit=crop&w=500&q=80",
+
+    stone:
+    "https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=500&q=80",
+
+    sink:
+    "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=500&q=80",
+
+    tap:
+    "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&w=500&q=80",
+
+    hardware:
+    "https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?auto=format&fit=crop&w=500&q=80",
+
+    handle:
+    "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=500&q=80",
+
+    screw:
+    "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=500&q=80",
+
+    glass:
+    "https://images.unsplash.com/photo-1501045661006-fcebe0257c3f?auto=format&fit=crop&w=500&q=80",
+
+    paint:
+    "https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=500&q=80",
+
+    glue:
+    "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=500&q=80"
+
+};
+
+
+/* =========================================
+   KITCHEN MATERIAL DATABASE
+========================================= */
+
+let materials = [
+
+    {
+        id:1,
+        name:"MDF Board",
+        cat:"Boards & Wood",
+        spec:"18mm",
+        unit:"Sheet",
+        price:5000,
+        img:image.board
+    },
+
+    {
+        id:2,
+        name:"Plywood Board",
+        cat:"Boards & Wood",
+        spec:"18mm",
+        unit:"Sheet",
+        price:4500,
+        img:image.wood
+    },
+
+    {
+        id:3,
+        name:"Granite Slab",
+        cat:"Granite & Stone",
+        spec:"20mm",
+        unit:"m²",
+        price:8000,
+        img:image.stone
+    },
+
+    {
+        id:4,
+        name:"Stainless Steel Sink",
+        cat:"Sinks",
+        spec:"Single Bowl",
+        unit:"Piece",
+        price:12000,
+        img:image.sink
+    },
+
+    {
+        id:5,
+        name:"Kitchen Tap",
+        cat:"Taps & Fittings",
+        spec:"Mixer",
+        unit:"Piece",
+        price:6500,
+        img:image.tap
+    },
+
+    {
+        id:6,
+        name:"Hinges",
+        cat:"Hardware",
+        spec:"Soft Close",
+        unit:"Piece",
+        price:250,
+        img:image.hardware
+    },
+
+    {
+        id:7,
+        name:"Drawer Runners",
+        cat:"Hardware",
+        spec:"Soft Close",
+        unit:"Pair",
+        price:1500,
+        img:image.hardware
+    },
+
+    {
+        id:8,
+        name:"Cabinet Handles",
+        cat:"Handles",
+        spec:"128mm",
+        unit:"Piece",
+        price:350,
+        img:image.handle
+    },
+
+    {
+        id:9,
+        name:"Cabinet Screws",
+        cat:"Hardware",
+        spec:"Cabinet Screw",
+        unit:"Box",
+        price:1200,
+        img:image.screw
+    },
+
+    {
+        id:10,
+        name:"Bolts",
+        cat:"Hardware",
+        spec:"M8",
+        unit:"Box",
+        price:800,
+        img:image.hardware
+    },
+
+    {
+        id:11,
+        name:"Wood Glue",
+        cat:"Adhesives",
+        spec:"2L",
+        unit:"Bottle",
+        price:1200,
+        img:image.glue
+    },
+
+    {
+        id:12,
+        name:"Silicone",
+        cat:"Adhesives",
+        spec:"Neutral",
+        unit:"Piece",
+        price:450,
+        img:image.glue
+    },
+
+    {
+        id:13,
+        name:"Clear Glass",
+        cat:"Glass",
+        spec:"6mm",
+        unit:"m²",
+        price:2800,
+        img:image.glass
+    },
+
+    {
+        id:14,
+        name:"Cabinet Paint",
+        cat:"Paint & Finishes",
+        spec:"Matt - 5L",
+        unit:"Tin",
+        price:4500,
+        img:image.paint
+    },
+
+    {
+        id:15,
+        name:"Cabinet Door",
+        cat:"Doors & Panels",
+        spec:"MDF",
+        unit:"Piece",
+        price:3500,
+        img:image.wood
+    },
+
+    {
+        id:16,
+        name:"Plumbing Set",
+        cat:"Plumbing",
+        spec:"Pipes & fittings",
+        unit:"Set",
+        price:2500,
+        img:image.tap
+    },
+
+    {
+        id:17,
+        name:"Electrical Set",
+        cat:"Electrical",
+        spec:"Cables & fittings",
+        unit:"Set",
+        price:2000,
+        img:image.hardware
+    },
+
+    {
+        id:18,
+        name:"Kickboard / Plinth",
+        cat:"Boards & Wood",
+        spec:"Aluminium",
+        unit:"Meter",
+        price:1000,
+        img:image.wood
+    }
+
+];
+
+
+/* =========================================
+   SYSTEM VARIABLES
+========================================= */
+
+let selected = [];
+
+let activeCat = "All";
+
+let lastPDFBlob = null;
+
+let lastPDFUrl = null;
+
+let lastPDFFileName = "";
+
+
+/* =========================================
+   CATEGORIES
+========================================= */
+
+const cats = [
+
+    "All",
+    "Boards & Wood",
+    "Granite & Stone",
+    "Sinks",
+    "Taps & Fittings",
+    "Hardware",
+    "Handles",
+    "Appliances",
+    "Plumbing",
+    "Electrical",
+    "Paint & Finishes",
+    "Adhesives",
+    "Glass",
+    "Doors & Panels",
+    "Others"
+
+];
+
+
+/* =========================================
+   MONEY FORMAT
+========================================= */
+
+function money(n){
+
+    return "KSh " +
+
+    Number(n).toLocaleString(
+        "en-KE",
+        {
+            minimumFractionDigits:2,
+            maximumFractionDigits:2
+        }
+    );
+
+}
+
+
+/* =========================================
+   INITIALIZE
+========================================= */
+
+function init(){
+
+    document.getElementById("quoteDate").value =
+        new Date().toISOString().slice(0,10);
+
+    document.getElementById("quoteNo").value =
+        "PFQ-" +
+        new Date().getFullYear() +
+        "-" +
+        String(Date.now()).slice(-5);
+
+    renderCategories();
+
+    renderMaterials();
+
+    updateValidity();
+
+    renderSelected();
+
+}
+
+
+/* =========================================
+   CATEGORY BUTTONS
+========================================= */
+
+function renderCategories(){
+
+    document.getElementById("categories").innerHTML =
+
+        cats.map(c => `
+
+            <button
+                class="${c === activeCat ? "active" : ""}"
+                onclick="activeCat='${c}';renderCategories();renderMaterials()"
+            >
+
+                ${c}
+
+            </button>
+
+        `).join("");
+
+}
+
+
+/* =========================================
+   MATERIAL DISPLAY
+========================================= */
+
+function renderMaterials(){
+
+    const q =
+        document
+        .getElementById("search")
+        .value
+        .toLowerCase();
+
+
+    let list = materials.filter(m =>
+
+        (activeCat === "All" || m.cat === activeCat)
+
+        &&
+
+        (
+            !q ||
+
+            `${m.name} ${m.cat} ${m.spec}`
+            .toLowerCase()
+            .includes(q)
+        )
+
+    );
+
+
+    document.getElementById("materialGrid").innerHTML =
+
+        list.map(m => `
+
+            <div class="material">
+
+                <img
+                    src="${m.img}"
+                    alt="${m.name}"
+                    loading="lazy"
+                >
+
+                <h3>
+                    ${m.name}
+                </h3>
+
+                <div class="spec">
+                    ${m.spec} • ${m.unit}
+                </div>
+
+                <div class="price">
+                    ${money(m.price)}
+                </div>
+
+                <button
+                    class="add"
+                    onclick="addMaterial(${m.id})"
+                >
+                    Add
+                </button>
+
+            </div>
+
+        `).join("")
+
+        ||
+
+        `
+            <div
+                class="empty"
+                style="grid-column:1/-1"
+            >
+                No kitchen material found.
+            </div>
+        `;
+
+}
+
+
+/* =========================================
+   ADD MATERIAL
+========================================= */
+
+function addMaterial(id){
+
+    const m =
+        materials.find(x => x.id === id);
+
+    if(!m) return;
+
+
+    const found =
+        selected.find(x => x.id === id);
+
+
+    if(found){
+
+        found.qty++;
+
+    }else{
+
+        selected.push({
+            ...m,
+            qty:1
+        });
+
+    }
+
+
+    renderSelected();
+
+    toast(m.name + " added");
+
+}
+
+
+/* =========================================
+   SELECTED MATERIAL TABLE
+========================================= */
+
+function renderSelected(){
+
+    const body =
+        document.getElementById("selectedBody");
+
+
+    document.getElementById("empty").style.display =
+        selected.length ? "none" : "block";
+
+
+    body.innerHTML =
+
+        selected.map((m,i) => `
+
+            <tr>
+
+                <td>
+                    ${i+1}
+                </td>
+
+
+                <td>
+
+                    <img
+                        class="thumb"
+                        src="${m.img}"
+                        alt=""
+                    >
+
+                </td>
+
+
+                <td>
+                    <b>
+                        ${m.name}
+                    </b>
+                </td>
+
+
+                <td>
+                    ${m.spec}
+                </td>
+
+
+                <td>
+
+                    <input
+                        class="unit"
+                        value="${m.unit}"
+                        onchange="
+                            selected[${i}].unit=this.value;
+                            calculate()
+                        "
+                    >
+
+                </td>
+
+
+                <td>
+
+                    <input
+                        class="qty"
+                        type="number"
+                        min="0"
+                        value="${m.qty}"
+                        onchange="
+                            selected[${i}].qty=Math.max(0,Number(this.value));
+                            calculate();
+                            renderSelected()
+                        "
+                    >
+
+                </td>
+
+
+                <td>
+
+                    <input
+                        class="unitprice"
+                        type="number"
+                        min="0"
+                        value="${m.price}"
+                        onchange="
+                            selected[${i}].price=Math.max(0,Number(this.value));
+                            calculate();
+                            renderSelected()
+                        "
+                    >
+
+                </td>
+
+
+                <td>
+
+                    <b>
+                        ${money(m.qty*m.price)}
+                    </b>
+
+                </td>
+
+
+                <td>
+
+                    <button
+                        class="remove"
+                        onclick="
+                            selected.splice(${i},1);
+                            renderSelected()
+                        "
+                    >
+                        ✕
+                    </button>
+
+                </td>
+
+            </tr>
+
+        `).join("");
+
+
+    calculate();
+
+}
+
+
+/* =========================================
+   CALCULATE TOTALS
+========================================= */
+
+function calculate(){
+
+    let subtotal =
+        selected.reduce(
+            (s,m) =>
+                s +
+                Number(m.qty) *
+                Number(m.price),
+            0
+        );
+
+
+    let vat =
+        subtotal * 0.15;
+
+
+    let total =
+        subtotal + vat;
+
+
+    document.getElementById("subtotal")
+        .textContent = money(subtotal);
+
+
+    document.getElementById("vat")
+        .textContent = money(vat);
+
+
+    document.getElementById("grand")
+        .textContent = money(total);
+
+}
+
+
+/* =========================================
+   CLEAR MATERIALS
+========================================= */
+
+function clearMaterials(){
+
+    selected = [];
+
+    renderSelected();
+
+}
+
+
+/* =========================================
+   VALIDITY
+========================================= */
+
+function updateValidity(){
+
+    const d =
+        new Date(
+            document.getElementById("quoteDate").value ||
+            new Date()
+        );
+
+
+    const days =
+        Number(
+            document.getElementById("validity").value
+        );
+
+
+    d.setDate(
+        d.getDate() + days
+    );
+
+
+    const until =
+        d.toLocaleDateString(
+            "en-GB",
+            {
+                day:"2-digit",
+                month:"short",
+                year:"numeric"
+            }
+        );
+
+
+    document.getElementById("validUntil")
+        .textContent =
+        days +
+        " days (Until " +
+        until +
+        ")";
+
+
+    document.getElementById("notes")
+        .value =
+        `Thank you for your business.
+This quotation is valid for ${days} days from the date of issue.`;
+
+}
+
+
+document
+.getElementById("quoteDate")
+.addEventListener(
+    "change",
+    updateValidity
+);
+
+
+/* =========================================
+   CUSTOM MATERIAL
+========================================= */
+
+function openCustom(){
+
+    document
+    .getElementById("modal")
+    .classList.add("show");
+
+}
+
+
+function closeCustom(){
+
+    document
+    .getElementById("modal")
+    .classList.remove("show");
+
+}
+
+
+function addCustom(){
+
+    const name =
+        document
+        .getElementById("mName")
+        .value
+        .trim();
+
+
+    if(!name){
+
+        alert("Enter a material name.");
+
+        return;
+
+    }
+
+
+    const m = {
+
+        id:Date.now(),
+
+        name:name,
+
+        cat:
+            document
+            .getElementById("mCat")
+            .value,
+
+        spec:
+            document
+            .getElementById("mSpec")
+            .value ||
+            "Custom",
+
+        unit:
+            document
+            .getElementById("mUnit")
+            .value ||
+            "Piece",
+
+        price:
+            Number(
+                document
+                .getElementById("mPrice")
+                .value
+            ) || 0,
+
+        img:image.hardware
+
+    };
+
+
+    materials.push(m);
+
+    activeCat = "All";
+
+    renderCategories();
+
+    renderMaterials();
+
+    addMaterial(m.id);
+
+    closeCustom();
+
+
+    [
+        "mName",
+        "mSpec",
+        "mUnit"
+    ]
+    .forEach(
+        id =>
+        document.getElementById(id).value = ""
+    );
+
+}
+
+
+/* =========================================
+   TOAST MESSAGE
+========================================= */
+
+function toast(t){
+
+    const e =
+        document.getElementById("toast");
+
+
+    e.textContent = t;
+
+    e.style.display = "block";
+
+
+    setTimeout(
+        () => e.style.display = "none",
+        1800
+    );
+
+}
+
+
+/* =========================================
+   BUILD PROFESSIONAL PDF
+========================================= */
+
+function buildPDF(){
+
+    if(!selected.length){
+
+        alert(
+            "Add at least one kitchen material before generating the quotation."
+        );
+
+        return null;
+
+    }
+
+
+    const {jsPDF} = window.jspdf;
+
+
+    const doc =
+        new jsPDF({
+            unit:"mm",
+            format:"a4"
+        });
+
+
+    const client =
+        document.getElementById("clientName").value ||
+        "Client";
+
+
+    const phone =
+        document.getElementById("clientPhone").value ||
+        "-";
+
+
+    const email =
+        document.getElementById("clientEmail").value ||
+        "-";
+
+
+    const no =
+        document.getElementById("quoteNo").value;
+
+
+    const date =
+        new Date(
+            document.getElementById("quoteDate").value ||
+            new Date()
+        )
+        .toLocaleDateString("en-GB");
+
+
+    const days =
+        Number(
+            document.getElementById("validity").value
+        );
+
+
+    const vd =
+        new Date(
+            document.getElementById("quoteDate").value ||
+            new Date()
+        );
+
+
+    vd.setDate(
+        vd.getDate() + days
+    );
+
+
+    const valid =
+        vd.toLocaleDateString("en-GB");
+
+
+    let y = 18;
+
+
+    /* HEADER */
+
+    doc.setFont(
+        "helvetica",
+        "bold"
+    );
+
+    doc.setFontSize(23);
+
+    doc.text(
+        "PrimeFit",
+        15,
+        y
+    );
+
+
+    doc.setTextColor(
+        237,
+        23,
+        36
+    );
+
+
+    doc.text(
+        " Interior Solutions",
+        46,
+        y
+    );
+
+
+    doc.setTextColor(
+        23,
+        34,
+        53
+    );
+
+
+    doc.setFontSize(16);
+
+    doc.text(
+        "QUOTATION",
+        195,
+        y,
+        {
+            align:"right"
+        }
+    );
+
+
+    y += 8;
+
+
+    doc.setDrawColor(
+        237,
+        23,
+        36
+    );
+
+
+    doc.line(
+        15,
+        y,
+        195,
+        y
+    );
+
+
+    y += 10;
+
+
+    doc.setFontSize(10);
+
+    doc.setFont(
+        "helvetica",
+        "normal"
+    );
+
+
+    doc.text(
+        "Quotation No: " + no,
+        15,
+        y
+    );
+
+
+    doc.text(
+        "Date: " + date,
+        195,
+        y,
+        {
+            align:"right"
+        }
+    );
+
+
+    y += 7;
+
+
+    doc.text(
+        "Valid Until: " + valid,
+        15,
+        y
+    );
+
+
+    y += 10;
+
+
+    /* CLIENT BOX */
+
+    doc.setFillColor(
+        244,
+        247,
+        250
+    );
+
+
+    doc.roundedRect(
+        15,
+        y,
+        180,
+        27,
+        2,
+        2,
+        "F"
+    );
+
+
+    doc.setFont(
+        "helvetica",
+        "bold"
+    );
+
+
+    doc.text(
+        "CLIENT",
+        20,
+        y + 8
+    );
+
+
+    doc.setFont(
+        "helvetica",
+        "normal"
+    );
+
+
+    doc.text(
+        client,
+        20,
+        y + 15
+    );
+
+
+    doc.text(
+        "Phone: " + phone,
+        20,
+        y + 21
+    );
+
+
+    doc.text(
+        "Email: " + email,
+        105,
+        y + 15
+    );
+
+
+    y += 36;
+
+
+    /* TABLE */
+
+    const headers = [
+
+        "No.",
+        "Description",
+        "Specification",
+        "Unit",
+        "Qty",
+        "Unit Price",
+        "Amount"
+
+    ];
+
+
+    const xs = [
+
+        15,
+        26,
+        82,
+        119,
+        139,
+        154,
+        178
+
+    ];
+
+
+    doc.setFillColor(
+        23,
+        48,
+        74
+    );
+
+
+    doc.rect(
+        15,
+        y,
+        180,
+        8,
+        "F"
+    );
+
+
+    doc.setTextColor(
+        255,
+        255,
+        255
+    );
+
+
+    doc.setFont(
+        "helvetica",
+        "bold"
+    );
+
+
+    doc.setFontSize(8);
+
+
+    headers.forEach(
+        (h,i) =>
+        doc.text(
+            h,
+            xs[i],
+            y + 5
+        )
+    );
+
+
+    y += 8;
+
+
+    doc.setTextColor(
+        23,
+        34,
+        53
+    );
+
+
+    doc.setFont(
+        "helvetica",
+        "normal"
+    );
+
+
+    /* MATERIAL ROWS */
+
+    selected.forEach(
+        (m,i) => {
+
+            if(y > 268){
+
+                doc.addPage();
+
+                y = 20;
+
+
+                doc.setFillColor(
+                    23,
+                    48,
+                    74
+                );
+
+
+                doc.rect(
+                    15,
+                    y,
+                    180,
+                    8,
+                    "F"
+                );
+
+
+                doc.setTextColor(
+                    255,
+                    255,
+                    255
+                );
+
+
+                headers.forEach(
+                    (h,j) =>
+                    doc.text(
+                        h,
+                        xs[j],
+                        y + 5
+                    )
+                );
+
+
+                y += 8;
+
+
+                doc.setTextColor(
+                    23,
+                    34,
+                    53
+                );
+
+            }
+
+
+            const vals = [
+
+                String(i+1),
+
+                m.name,
+
+                m.spec,
+
+                m.unit,
+
+                String(m.qty),
+
+                Number(m.price)
+                .toLocaleString(
+                    "en-KE",
+                    {
+                        minimumFractionDigits:2
+                    }
+                ),
+
+                Number(m.qty*m.price)
+                .toLocaleString(
+                    "en-KE",
+                    {
+                        minimumFractionDigits:2
+                    }
+                )
+
+            ];
+
+
+            vals.forEach(
+                (v,j) => {
+
+                    let t =
+                        doc.splitTextToSize(
+                            v,
+                            [
+                                10,
+                                53,
+                                34,
+                                16,
+                                12,
+                                22,
+                                17
+                            ][j]
+                        );
+
+
+                    doc.text(
+                        t[0],
+                        xs[j],
+                        y + 5
+                    );
+
+                }
+            );
+
+
+            doc.setDrawColor(
+                220,
+                225,
+                230
+            );
+
+
+            doc.line(
+                15,
+                y + 8,
+                195,
+                y + 8
+            );
+
+
+            y += 9;
+
+        }
+    );
+
+
+    /* TOTALS */
+
+    let subtotal =
+        selected.reduce(
+            (s,m) =>
+                s +
+                m.qty
