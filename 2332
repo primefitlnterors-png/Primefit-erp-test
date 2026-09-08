@@ -1,0 +1,2444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PrimeFit ERP - 3D Furniture Designer</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#eef2f0;
+    color:#17211d
+}
+
+header{
+    background:#123d2d;
+    color:white;
+    padding:14px 16px;
+    position:sticky;
+    top:0;
+    z-index:20
+}
+
+header h1{
+    margin:0;
+    font-size:20px
+}
+
+.wrap{
+    max-width:1200px;
+    margin:auto;
+    padding:14px
+}
+
+.toolbar,.panel{
+    background:white;
+    border-radius:12px;
+    padding:12px;
+    margin-bottom:12px;
+    box-shadow:0 2px 8px #0001
+}
+
+.toolbar{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap
+}
+
+select,input,button{
+    font:inherit
+}
+
+select,input{
+    padding:9px;
+    border:1px solid #ccd5d0;
+    border-radius:7px
+}
+
+button{
+    border:0;
+    border-radius:8px;
+    padding:10px 13px;
+    background:#176b4c;
+    color:white;
+    font-weight:bold;
+    cursor:pointer
+}
+
+button.secondary{
+    background:#52645c
+}
+
+button.danger{
+    background:#a93636
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:230px 1fr 260px;
+    gap:12px
+}
+
+.library{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:7px
+}
+
+.library button{
+    background:#f1f5f3;
+    color:#173b2d;
+    border:1px solid #cbd8d1;
+    font-size:12px;
+    padding:8px
+}
+
+.stage-wrap{
+    background:#dce4df;
+    border-radius:12px;
+    padding:12px;
+    overflow:auto;
+    min-height:600px
+}
+
+#stage{
+    position:relative;
+    width:900px;
+    height:620px;
+    margin:auto;
+    background:linear-gradient(145deg,#fff,#eef2ef);
+    border:2px solid #aebbb4;
+    border-radius:8px;
+    overflow:hidden;
+    box-shadow:inset 0 0 35px #0001
+}
+
+#stage:before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+        linear-gradient(#00000008 1px,transparent 1px),
+        linear-gradient(90deg,#00000008 1px,transparent 1px);
+    background-size:25px 25px;
+    pointer-events:none
+}
+
+.item{
+    position:absolute;
+    touch-action:none;
+    cursor:grab;
+    user-select:none;
+    transform-style:preserve-3d
+}
+
+.item.selected{
+    outline:2px solid #20a56e;
+    outline-offset:4px;
+    z-index:10
+}
+
+.label{
+    position:absolute;
+    top:-22px;
+    left:0;
+    background:#173b2d;
+    color:white;
+    font-size:11px;
+    padding:3px 6px;
+    border-radius:4px;
+    white-space:nowrap;
+    pointer-events:none
+}
+
+.size{
+    position:absolute;
+    bottom:-20px;
+    left:0;
+    font-size:10px;
+    background:white;
+    padding:2px 4px;
+    border-radius:3px;
+    box-shadow:0 1px 4px #0002;
+    pointer-events:none
+}
+
+.resize{
+    position:absolute;
+    right:-8px;
+    bottom:-8px;
+    width:16px;
+    height:16px;
+    background:#20a56e;
+    border:2px solid white;
+    border-radius:50%;
+    cursor:nwse-resize;
+    z-index:30
+}
+
+
+/* =====================================================
+   3D BASIC PANELS
+===================================================== */
+
+.face{
+    position:absolute;
+    inset:0;
+    border:3px solid #6e4b31;
+    background:linear-gradient(135deg,#c99b69,#a87343);
+    box-shadow:
+        inset 0 0 0 5px #8d5d39,
+        8px 10px 12px #0003;
+    transform-style:preserve-3d
+}
+
+.edge{
+    position:absolute;
+    background:#80522f
+}
+
+.edge.right{
+    right:-10px;
+    top:8px;
+    width:10px;
+    height:calc(100% - 8px);
+    transform:skewY(38deg);
+    transform-origin:left
+}
+
+.edge.bottom{
+    left:8px;
+    bottom:-10px;
+    height:10px;
+    width:calc(100% - 8px);
+    transform:skewX(38deg);
+    transform-origin:top
+}
+
+.panel3d{
+    position:absolute;
+    left:13%;
+    top:12%;
+    width:74%;
+    height:76%;
+    border:4px solid #7b5030;
+    background:linear-gradient(145deg,#d7ad7c,#b77e4b);
+    box-shadow:
+        inset 0 0 0 5px #9a673e,
+        3px 4px 7px #0004
+}
+
+.handle3d{
+    position:absolute;
+    width:7px;
+    height:48px;
+    right:10%;
+    top:50%;
+    margin-top:-24px;
+    border-radius:5px;
+    background:linear-gradient(90deg,#333,#bbb,#333);
+    box-shadow:3px 3px 4px #0005
+}
+
+
+/* =====================================================
+   3D SHELF
+===================================================== */
+
+.shelf3d{
+    position:absolute;
+    inset:0;
+    background:transparent
+}
+
+.shelf3d .board{
+    position:absolute;
+    left:5%;
+    width:90%;
+    height:13%;
+    background:linear-gradient(#d8ad7a,#a96f40);
+    border:2px solid #754b2e;
+    box-shadow:8px 8px 8px #0003
+}
+
+.shelf3d .b1{top:10%}
+.shelf3d .b2{top:43%}
+.shelf3d .b3{top:76%}
+
+.shelf3d .side{
+    position:absolute;
+    top:7%;
+    width:8%;
+    height:86%;
+    background:linear-gradient(
+        90deg,
+        #9a6339,
+        #d1a171,
+        #8b572f
+    );
+    border:2px solid #70472b
+}
+
+.shelf3d .sl{left:2%}
+.shelf3d .sr{right:2%}
+
+
+/* =====================================================
+   3D CABINET
+===================================================== */
+
+.cab3d{
+    position:absolute;
+    inset:0;
+    background:#a97648;
+    border:4px solid #69452d;
+    box-shadow:12px 14px 16px #0003;
+    transform-style:preserve-3d
+}
+
+.cab3d:after{
+    content:"";
+    position:absolute;
+    right:-13px;
+    top:8px;
+    width:13px;
+    height:calc(100% - 8px);
+    background:#79502f;
+    transform:skewY(38deg)
+}
+
+.cabdoors{
+    position:absolute;
+    inset:8%;
+    display:flex;
+    gap:7px
+}
+
+.cabdoor{
+    position:relative;
+    flex:1;
+    border:3px solid #68452d;
+    background:linear-gradient(145deg,#d5a976,#ad7645);
+    box-shadow:
+        inset 0 0 0 5px #99643d,
+        4px 6px 8px #0003
+}
+
+.cabdoor .h{
+    position:absolute;
+    right:9%;
+    top:50%;
+    width:6px;
+    height:42px;
+    background:linear-gradient(90deg,#333,#bbb,#333);
+    border-radius:5px
+}
+
+.top3d{
+    position:absolute;
+    left:-2%;
+    top:-9%;
+    width:104%;
+    height:10%;
+    background:linear-gradient(#eee,#aaa);
+    border:2px solid #777;
+    box-shadow:0 6px 8px #0004
+}
+
+
+/* =====================================================
+   OVEN / COOKER
+===================================================== */
+
+.appliance{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(145deg,#e9e9e9,#a9adb0);
+    border:4px solid #666;
+    box-shadow:9px 11px 12px #0003
+}
+
+.ovenwindow{
+    position:absolute;
+    left:13%;
+    right:13%;
+    bottom:10%;
+    height:55%;
+    background:linear-gradient(135deg,#555,#111);
+    border:5px solid #777;
+    border-radius:4px
+}
+
+.knobs{
+    position:absolute;
+    top:10%;
+    left:12%;
+    right:12%;
+    display:flex;
+    justify-content:space-around
+}
+
+.knobs i{
+    width:13px;
+    height:13px;
+    border-radius:50%;
+    background:#333;
+    border:2px solid #bbb
+}
+
+
+/* =====================================================
+   HOB
+===================================================== */
+
+.burners{
+    position:absolute;
+    inset:12%;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px
+}
+
+.burners i{
+    border:5px solid #333;
+    border-radius:50%;
+    background:
+        radial-gradient(
+            circle,
+            #aaa 0 18%,
+            #222 19% 30%,
+            #888 31% 38%,
+            #222 39% 45%,
+            #999 46%
+        );
+    box-shadow:inset 0 0 6px #000
+}
+
+
+/* =====================================================
+   WASHING MACHINE / ROUND APPLIANCE
+===================================================== */
+
+.round{
+    position:absolute;
+    border-radius:50%;
+    background:
+        radial-gradient(
+            circle,
+            #bbb 0 10%,
+            #333 11% 17%,
+            #999 18% 23%,
+            #222 24% 30%,
+            #777 31%
+        );
+    border:4px solid #555;
+    box-shadow:7px 9px 10px #0003
+}
+
+
+/* =====================================================
+   SINK / TAP
+===================================================== */
+
+.sinkbasin{
+    position:absolute;
+    left:12%;
+    top:20%;
+    width:70%;
+    height:50%;
+    border-radius:10px 10px 35px 35px;
+    background:linear-gradient(145deg,#eee,#888);
+    border:4px solid #777;
+    box-shadow:inset 0 -10px 15px #5554
+}
+
+.tap3d{
+    position:absolute;
+    right:8%;
+    top:10%;
+    width:15%;
+    height:50%;
+    border:7px solid #888;
+    border-bottom:0;
+    border-radius:40px 40px 0 0
+}
+
+.tap3d:after{
+    content:"";
+    position:absolute;
+    right:-7px;
+    bottom:-3px;
+    width:20px;
+    height:8px;
+    background:#888
+}
+
+
+/* =====================================================
+   3D DOOR
+===================================================== */
+
+.door3d{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(145deg,#d8b083,#a97445);
+    border:7px solid #6d472c;
+    box-shadow:12px 14px 15px #0004
+}
+
+.door3d:before,
+.door3d:after{
+    content:"";
+    position:absolute;
+    left:14%;
+    width:72%;
+    height:32%;
+    border:5px solid #79502f;
+    background:linear-gradient(145deg,#c99a69,#aa7040);
+    box-shadow:inset 0 0 0 5px #94613b
+}
+
+.door3d:before{
+    top:10%
+}
+
+.door3d:after{
+    bottom:10%
+}
+
+.doorhandle{
+    position:absolute;
+    right:10%;
+    top:50%;
+    width:8px;
+    height:55px;
+    background:linear-gradient(90deg,#222,#ccc,#222);
+    border-radius:5px
+}
+
+
+/* =====================================================
+   3D WARDROBE
+===================================================== */
+
+.wardrobe3d{
+    position:absolute;
+    inset:0;
+    background:#9b673f;
+    border:5px solid #5e3d28;
+    box-shadow:14px 16px 18px #0004
+}
+
+.wardrobe3d .sections{
+    position:absolute;
+    inset:7%;
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:6px
+}
+
+.wardrobe3d .sec{
+    position:relative;
+    background:linear-gradient(145deg,#d2a371,#aa7244);
+    border:3px solid #70482c;
+    box-shadow:inset 0 0 0 4px #93603b
+}
+
+.wardrobe3d .rail{
+    position:absolute;
+    top:30%;
+    left:10%;
+    right:10%;
+    height:7px;
+    background:#777;
+    border-radius:5px
+}
+
+.wardrobe3d .drawer{
+    position:absolute;
+    left:10%;
+    right:10%;
+    height:14%;
+    background:#c28f5d;
+    border:2px solid #70482c
+}
+
+.wardrobe3d .d1{
+    bottom:10%
+}
+
+.wardrobe3d .d2{
+    bottom:27%
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+.info h3{
+    margin:0 0 8px
+}
+
+#components{
+    font-size:12px;
+    line-height:1.5
+}
+
+.component-row{
+    border-bottom:1px solid #ddd;
+    padding:5px 0
+}
+
+.small{
+    font-size:12px;
+    color:#56645e
+}
+
+.quote{
+    width:100%;
+    border-collapse:collapse;
+    font-size:12px
+}
+
+.quote th,
+.quote td{
+    border:1px solid #ccd5d0;
+    padding:6px;
+    text-align:left
+}
+
+.quote th{
+    background:#edf3ef
+}
+
+#pdfFrame{
+    width:100%;
+    height:600px;
+    border:1px solid #bbb;
+    display:none
+}
+
+@media(max-width:850px){
+    .grid{
+        grid-template-columns:1fr
+    }
+
+    .stage-wrap{
+        min-height:500px
+    }
+
+    .library{
+        grid-template-columns:repeat(2,1fr)
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>PrimeFit ERP — 3D Furniture Designer</h1>
+</header>
+
+<div class="wrap">
+
+<div class="toolbar">
+
+<label>
+Project:
+<select id="projectType" onchange="loadLibrary()">
+<option>Kitchen</option>
+<option>Doors</option>
+<option>Wardrobe</option>
+<option>Office</option>
+<option>TV Unit</option>
+<option>Bathroom</option>
+<option>Bedroom</option>
+<option>Custom Design</option>
+</select>
+</label>
+
+<input id="projectName" placeholder="Project name">
+
+<button onclick="clearStage()">Clear Design</button>
+
+<button onclick="buildQuote()">Build Quotation</button>
+
+<button onclick="makePDF()">Create PDF</button>
+
+</div>
+
+
+<div class="grid">
+
+<div class="panel">
+
+<h3>3D Components</h3>
+
+<div id="library" class="library"></div>
+
+<p class="small">
+Tap a component to add it.
+Drag the component to move it.
+Use the green corner to resize it.
+</p>
+
+</div>
+
+
+<div class="stage-wrap">
+
+<div id="stage"></div>
+
+</div>
+
+
+<div class="panel info">
+
+<h3>Selected Component</h3>
+
+<div id="selectedInfo">
+Nothing selected.
+</div>
+
+<hr>
+
+<h3>Components</h3>
+
+<div id="components"></div>
+
+</div>
+
+</div>
+
+
+<div class="panel" id="quotePanel" style="display:none">
+
+<h2>Quotation</h2>
+
+<div id="quoteOutput"></div>
+
+</div>
+
+
+<div class="panel">
+
+<button onclick="makePDF()">Create PDF</button>
+
+<button id="openBtn"
+class="secondary"
+style="display:none">
+Open PDF
+</button>
+
+<button id="saveBtn"
+class="secondary"
+style="display:none">
+Download / Save PDF
+</button>
+
+<button id="shareBtn"
+class="secondary"
+style="display:none">
+Share PDF
+</button>
+
+<div id="pdfStatus" class="small"></div>
+
+<iframe id="pdfFrame"></iframe>
+
+</div>
+
+</div>
+
+
+<script>
+
+const libs={
+
+Kitchen:[
+"Base Cabinet",
+"Wall Cabinet",
+"Tall Cabinet",
+"Drawer",
+"Door",
+"Shelf",
+"Sink Unit",
+"Oven/Cooker",
+"Hob",
+"Corner Cabinet",
+"Pantry",
+"Microwave",
+"Washing Machine",
+"Fridge",
+"Tap",
+"Granite Worktop"
+],
+
+Doors:[
+"Interior Door",
+"Double Door",
+"Sliding Door",
+"Kitchen Door",
+"Door Handle",
+"Door Panel"
+],
+
+Wardrobe:[
+"Wardrobe",
+"Drawer",
+"Door",
+"Shelf",
+"Hanging Rail",
+"Shoe Rack",
+"Side Panel",
+"Top Panel",
+"Bottom Panel",
+"Divider",
+"Mirror",
+"Handle"
+],
+
+Office:[
+"Worktop",
+"Drawer",
+"Door",
+"Shelf",
+"Cabinet",
+"Divider",
+"Pedestal",
+"Handle"
+],
+
+"TV Unit":[
+"TV Opening",
+"Drawer",
+"Door",
+"Shelf",
+"Base Cabinet",
+"Wall Cabinet",
+"LED Strip"
+],
+
+Bathroom:[
+"Vanity Cabinet",
+"Basin",
+"Mirror",
+"Tap",
+"Shelf",
+"Tall Cabinet"
+],
+
+Bedroom:[
+"Bed",
+"Bedside Table",
+"Wardrobe",
+"Drawer",
+"Shelf",
+"Mirror"
+],
+
+"Custom Design":[
+"Cabinet",
+"Drawer",
+"Door",
+"Shelf",
+"Panel",
+"Mirror"
+]
+
+};
+
+
+const materials={
+
+Kitchen:[
+["MDF 18mm","sheet",10],
+["Plywood","sheet",5],
+["Drawer runners","pair",0],
+["Granite","m",0],
+["Kitchen rug","pcs",1],
+["Wood glue","L",2],
+["Silicone","tube",2],
+["Sink","pcs",0],
+["Kitchen taps","pcs",0],
+["Hinges","pcs",0],
+["Handles","pcs",0]
+],
+
+Doors:[
+["Door leaf","pcs",0],
+["Door frame","pcs",0],
+["Hinges","pcs",0],
+["Door handles","pcs",0],
+["Lock set","pcs",0],
+["Screws","box",1],
+["Paint/finish","L",2]
+],
+
+Wardrobe:[
+["MDF 18mm","sheet",0],
+["Drawer runners","pair",0],
+["Hinges","pcs",0],
+["Handles","pcs",0],
+["Hanging rail","m",0],
+["Mirror","sqm",0]
+]
+
+};
+
+
+let objects=[];
+let selected=null;
+let drag=null;
+let resize=null;
+
+let lastPDFBlob=null;
+let lastPDFUrl=null;
+
+
+/* =====================================================
+   LOAD COMPONENT LIBRARY
+===================================================== */
+
+function loadLibrary(){
+
+    const box=document.getElementById("library");
+
+    box.innerHTML="";
+
+    (libs[projectType.value] ||
+     libs["Custom Design"]).forEach(n=>{
+
+        const b=document.createElement("button");
+
+        b.textContent="+ "+n;
+
+        b.onclick=()=>addObject(n);
+
+        box.appendChild(b);
+
+    });
+
+    clearStage();
+}
+
+
+/* =====================================================
+   3D VISUAL COMPONENTS
+===================================================== */
+
+function visual(name){
+
+    const n=name.toLowerCase();
+
+
+    /* WARDROBE */
+
+    if(n.includes("wardrobe"))
+
+        return `
+        <div class="wardrobe3d">
+
+            <div class="sections">
+
+                <div class="sec">
+                    <div class="rail"></div>
+                </div>
+
+                <div class="sec">
+                    <div class="rail"></div>
+                </div>
+
+                <div class="sec">
+                    <div class="drawer d1"></div>
+                    <div class="drawer d2"></div>
+                </div>
+
+            </div>
+
+        </div>`;
+
+
+    /* SHELF */
+
+    if(n.includes("shelf"))
+
+        return `
+        <div class="shelf3d">
+
+            <div class="side sl"></div>
+            <div class="side sr"></div>
+
+            <div class="board b1"></div>
+            <div class="board b2"></div>
+            <div class="board b3"></div>
+
+        </div>`;
+
+
+    /* DOORS */
+
+    if(n.includes("door"))
+
+        return `
+        <div class="door3d">
+            <div class="doorhandle"></div>
+        </div>`;
+
+
+    /* DRAWER */
+
+    if(n.includes("drawer"))
+
+        return `
+        <div class="face">
+
+            <div class="panel3d"></div>
+
+            <div class="handle3d"></div>
+
+            <div class="edge right"></div>
+            <div class="edge bottom"></div>
+
+        </div>`;
+
+
+    /* OVEN */
+
+    if(n.includes("oven") || n.includes("cooker"))
+
+        return `
+        <div class="appliance">
+
+            <div class="knobs">
+                <i></i>
+                <i></i>
+                <i></i>
+                <i></i>
+            </div>
+
+            <div class="ovenwindow"></div>
+
+        </div>`;
+
+
+    /* HOB */
+
+    if(n.includes("hob"))
+
+        return `
+        <div class="appliance">
+
+            <div class="burners">
+                <i></i>
+                <i></i>
+                <i></i>
+                <i></i>
+            </div>
+
+        </div>`;
+
+
+    /* WASHING MACHINE */
+
+    if(n.includes("washing"))
+
+        return `
+        <div class="appliance">
+
+            <div
+            class="round"
+            style="
+            width:62%;
+            height:62%;
+            left:19%;
+            top:25%">
+            </div>
+
+        </div>`;
+
+
+    /* FRIDGE */
+
+    if(n.includes("fridge"))
+
+        return `
+        <div class="appliance">
+
+            <div
+            class="door3d"
+            style="
+            left:8%;
+            right:8%;
+            top:6%;
+            bottom:52%">
+
+                <div class="doorhandle"></div>
+
+            </div>
+
+            <div
+            class="door3d"
+            style="
+            left:8%;
+            right:8%;
+            top:51%;
+            bottom:6%">
+
+                <div class="doorhandle"></div>
+
+            </div>
+
+        </div>`;
+
+
+    /* SINK */
+
+    if(n.includes("sink") || n.includes("basin"))
+
+        return `
+        <div class="face">
+
+            <div class="sinkbasin"></div>
+
+            <div class="tap3d"></div>
+
+        </div>`;
+
+
+    /* TAP */
+
+    if(n.includes("tap"))
+
+        return `
+        <div class="face" style="background:#bbb">
+
+            <div
+            class="tap3d"
+            style="
+            left:35%;
+            right:auto;
+            width:30%;
+            top:20%">
+            </div>
+
+        </div>`;
+
+
+    /* GRANITE / WORKTOP */
+
+    if(n.includes("granite") ||
+       n.includes("worktop") ||
+       n.includes("panel"))
+
+        return `
+        <div
+        class="face"
+        style="
+        background:linear-gradient(#777,#444);
+        border-color:#333">
+
+            <div class="top3d"></div>
+
+        </div>`;
+
+
+    /* CABINET */
+
+    if(n.includes("cabinet") ||
+       n.includes("pantry") ||
+       n.includes("pedestal"))
+
+        return `
+        <div class="cab3d">
+
+            <div class="top3d"></div>
+
+            <div class="cabdoors">
+
+                <div class="cabdoor">
+                    <div class="h"></div>
+                </div>
+
+                <div class="cabdoor">
+                    <div class="h"></div>
+                </div>
+
+            </div>
+
+        </div>`;
+
+
+    /* MIRROR */
+
+    if(n.includes("mirror"))
+
+        return `
+        <div
+        class="face"
+        style="
+        background:linear-gradient(135deg,#dff,#788);
+        border-color:#777;
+        border-radius:8px">
+        </div>`;
+
+
+    /* BED */
+
+    if(n.includes("bed"))
+
+        return `
+        <div
+        class="cab3d"
+        style="background:#80634d">
+
+            <div
+            style="
+            position:absolute;
+            inset:12%;
+            background:#eee;
+            border-radius:8px;
+            box-shadow:0 8px 8px #0003">
+            </div>
+
+        </div>`;
+
+
+    /* HANDLE */
+
+    if(n.includes("handle"))
+
+        return `
+        <div
+        class="face"
+        style="background:#555">
+
+            <div
+            class="handle3d"
+            style="
+            left:40%;
+            right:auto;
+            top:25%">
+            </div>
+
+        </div>`;
+
+
+    /* TV */
+
+    if(n.includes("tv"))
+
+        return `
+        <div
+        class="face"
+        style="
+        background:#111;
+        border-color:#333">
+
+            <div
+            style="
+            position:absolute;
+            left:5%;
+            right:5%;
+            bottom:-25px;
+            height:10px;
+            background:#333">
+            </div>
+
+        </div>`;
+
+
+    /* DEFAULT CABINET */
+
+    return `
+    <div class="cab3d">
+
+        <div class="cabdoors">
+
+            <div class="cabdoor">
+                <div class="h"></div>
+            </div>
+
+        </div>
+
+    </div>`;
+
+}
+
+
+/* =====================================================
+   ADD COMPONENT
+===================================================== */
+
+function addObject(name){
+
+    const id=Date.now()+Math.random();
+
+    const o={
+        id:id,
+        name:name,
+        x:80+(objects.length*18)%500,
+        y:80+(objects.length*15)%350,
+        w:180,
+        h:130
+    };
+
+    objects.push(o);
+
+    render();
+
+    select(o);
+}
+
+
+/* =====================================================
+   RENDER DESIGN
+===================================================== */
+
+function render(){
+
+    const stage=document.getElementById("stage");
+
+    stage.innerHTML="";
+
+    objects.forEach(o=>{
+
+        const el=document.createElement("div");
+
+        el.className=
+            "item"+
+            (selected===o ? " selected":"");
+
+        el.dataset.id=o.id;
+
+        el.style.left=o.x+"px";
+        el.style.top=o.y+"px";
+        el.style.width=o.w+"px";
+        el.style.height=o.h+"px";
+
+        el.innerHTML=`
+
+            <div class="label">
+                ${o.name}
+            </div>
+
+            ${visual(o.name)}
+
+            <div class="size">
+                ${Math.round(o.w*2)}
+                ×
+                ${Math.round(o.h*2)}
+                mm
+            </div>
+
+            <div class="resize"></div>
+        `;
+
+
+        el.onpointerdown=e=>startDrag(e,o);
+
+
+        el.querySelector(".resize")
+          .onpointerdown=e=>startResize(e,o);
+
+
+        stage.appendChild(el);
+
+    });
+
+    updateList();
+
+}
+
+
+/* =====================================================
+   SELECT
+===================================================== */
+
+function select(o){
+
+    selected=o;
+
+    render();
+
+    showSelected();
+
+}
+
+
+/* =====================================================
+   DRAG
+===================================================== */
+
+function startDrag(e,o){
+
+    if(e.target.classList.contains("resize"))
+        return;
+
+    selected=o;
+
+    drag={
+        o:o,
+        sx:e.clientX,
+        sy:e.clientY,
+        x:o.x,
+        y:o.y
+    };
+
+    e.currentTarget.setPointerCapture(e.pointerId);
+
+    render();
+
+    showSelected();
+
+    e.currentTarget.onpointermove=moveDrag;
+
+    e.currentTarget.onpointerup=endPointer;
+
+}
+
+
+function moveDrag(e){
+
+    if(!drag)
+        return;
+
+    drag.o.x=Math.max(
+        0,
+        Math.min(
+            900-drag.o.w,
+            drag.x+e.clientX-drag.sx
+        )
+    );
+
+    drag.o.y=Math.max(
+        0,
+        Math.min(
+            620-drag.o.h,
+            drag.y+e.clientY-drag.sy
+        )
+    );
+
+    renderFast();
+
+}
+
+
+function endPointer(){
+
+    drag=null;
+
+}
+
+
+/* =====================================================
+   RESIZE
+===================================================== */
+
+function startResize(e,o){
+
+    e.stopPropagation();
+
+    selected=o;
+
+    resize={
+        o:o,
+        sx:e.clientX,
+        sy:e.clientY,
+        w:o.w,
+        h:o.h
+    };
+
+    e.currentTarget.setPointerCapture(e.pointerId);
+
+    e.currentTarget.onpointermove=moveResize;
+
+    e.currentTarget.onpointerup=()=>{
+        resize=null;
+    };
+
+}
+
+
+function moveResize(e){
+
+    if(!resize)
+        return;
+
+    resize.o.w=Math.max(
+        60,
+        Math.min(
+            500,
+            resize.w+e.clientX-resize.sx
+        )
+    );
+
+    resize.o.h=Math.max(
+        50,
+        Math.min(
+            400,
+            resize.h+e.clientY-resize.sy
+        )
+    );
+
+    renderFast();
+
+    showSelected();
+
+}
+
+
+/* =====================================================
+   FAST RENDER
+===================================================== */
+
+function renderFast(){
+
+    objects.forEach(o=>{
+
+        const el=
+        document.querySelector(
+            `[data-id="${o.id}"]`
+        );
+
+        if(el){
+
+            el.style.left=o.x+"px";
+            el.style.top=o.y+"px";
+
+            el.style.width=o.w+"px";
+            el.style.height=o.h+"px";
+
+            el.querySelector(".size")
+              .textContent=
+              Math.round(o.w*2)+
+              " × "+
+              Math.round(o.h*2)+
+              " mm";
+
+        }
+
+    });
+
+    updateList();
+
+}
+
+
+/* =====================================================
+   SELECTED INFORMATION
+===================================================== */
+
+function showSelected(){
+
+    const s=
+    document.getElementById("selectedInfo");
+
+    if(!selected){
+
+        s.textContent="Nothing selected.";
+
+        return;
+    }
+
+    s.innerHTML=`
+
+        <b>${selected.name}</b>
+
+        <br>
+
+        Width:
+        <input
+        id="sw"
+        type="number"
+        value="${Math.round(selected.w*2)}">
+        mm
+
+        <br>
+
+        Height:
+        <input
+        id="sh"
+        type="number"
+        value="${Math.round(selected.h*2)}">
+        mm
+
+        <br><br>
+
+        <button onclick="applySize()">
+            Apply Size
+        </button>
+
+        <button
+        class="danger"
+        onclick="deleteSelected()">
+            Delete
+        </button>
+
+    `;
+
+}
+
+
+/* =====================================================
+   SIZE
+===================================================== */
+
+function applySize(){
+
+    if(!selected)
+        return;
+
+    selected.w=Math.max(
+        60,
+        Math.min(
+            500,
+            Number(sw.value)/2
+        )
+    );
+
+    selected.h=Math.max(
+        50,
+        Math.min(
+            400,
+            Number(sh.value)/2
+        )
+    );
+
+    render();
+
+}
+
+
+/* =====================================================
+   DELETE
+===================================================== */
+
+function deleteSelected(){
+
+    if(!selected)
+        return;
+
+    objects=
+    objects.filter(
+        x=>x!==selected
+    );
+
+    selected=null;
+
+    render();
+
+    showSelected();
+
+}
+
+
+/* =====================================================
+   COMPONENT LIST
+===================================================== */
+
+function updateList(){
+
+    document.getElementById("components")
+    .innerHTML=
+
+    objects.map((o,i)=>`
+
+        <div class="component-row">
+
+            <b>
+                ${i+1}. ${o.name}
+            </b>
+
+            <br>
+
+            ${Math.round(o.w*2)}
+            ×
+            ${Math.round(o.h*2)}
+            mm
+
+        </div>
+
+    `).join("")
+
+    ||
+
+    "No components yet.";
+
+}
+
+
+/* =====================================================
+   CLEAR
+===================================================== */
+
+function clearStage(){
+
+    objects=[];
+
+    selected=null;
+
+    render();
+
+    document.getElementById("quotePanel")
+    .style.display="none";
+
+    showSelected();
+
+}
+
+
+/* =====================================================
+   BUILD QUOTATION
+===================================================== */
+
+function buildQuote(){
+
+    const type=projectType.value;
+
+    const name=
+        projectName.value ||
+        "PrimeFit Furniture Project";
+
+    const date=new Date();
+
+    const until=new Date(date);
+
+    until.setDate(
+        until.getDate()+15
+    );
+
+
+    let mats=
+    (
+        materials[type] ||
+
+        [
+            ["MDF 18mm","sheet",0],
+            ["Plywood","sheet",0],
+            ["Screws","box",1],
+            ["Glue","L",1],
+            ["Handles","pcs",0]
+        ]
+
+    ).map(x=>[
+        x[0],
+        x[1],
+        x[2],
+        0
+    ]);
+
+
+    objects.forEach(o=>{
+
+        const n=
+        o.name.toLowerCase();
+
+        mats.forEach(m=>{
+
+            if(
+                n.includes("drawer") &&
+                m[0].toLowerCase()
+                 .includes("runner")
+            )
+                m[2]+=1;
+
+
+            if(
+                n.includes("door") &&
+                m[0].toLowerCase()
+                 .includes("hinge")
+            )
+                m[2]+=2;
+
+
+            if(
+                (
+                    n.includes("door") ||
+                    n.includes("drawer")
+                ) &&
+                m[0].toLowerCase()
+                 .includes("handle")
+            )
+                m[2]+=1;
+
+
+            if(
+                n.includes("rail") &&
+                m[0].toLowerCase()
+                 .includes("rail")
+            )
+                m[2]+=1;
+
+
+            if(
+                n.includes("sink") &&
+                m[0].toLowerCase()
+                 .includes("sink")
+            )
+                m[2]+=1;
+
+
+            if(
+                n.includes("tap") &&
+                m[0].toLowerCase()
+                 .includes("tap")
+            )
+                m[2]+=1;
+
+        });
+
+    });
+
+
+    document.getElementById("quotePanel")
+    .style.display="block";
+
+
+    document.getElementById("quoteOutput")
+    .innerHTML=`
+
+        <p>
+
+        <b>Project:</b>
+        ${name}
+
+        <br>
+
+        <b>Type:</b>
+        ${type}
+
+        <br>
+
+        <b>Quotation Date:</b>
+        ${date.toLocaleDateString()}
+
+        <br>
+
+        <b>Valid Until:</b>
+        ${until.toLocaleDateString()}
+        (15 days)
+
+        </p>
+
+
+        <h3>
+            3D Design Components
+        </h3>
+
+
+        <table class="quote">
+
+            <tr>
+                <th>#</th>
+                <th>Component</th>
+                <th>Measurements</th>
+            </tr>
+
+            ${objects.map((o,i)=>`
+
+                <tr>
+
+                    <td>${i+1}</td>
+
+                    <td>
+                        ${o.name}
+                    </td>
+
+                    <td>
+                        ${Math.round(o.w*2)}
+                        ×
+                        ${Math.round(o.h*2)}
+                        mm
+                    </td>
+
+                </tr>
+
+            `).join("")}
+
+        </table>
+
+
+        <h3>
+            Suggested Materials
+        </h3>
+
+
+        <table class="quote">
+
+            <tr>
+                <th>Material</th>
+                <th>Unit</th>
+                <th>Qty</th>
+            </tr>
+
+            ${mats
+            .filter(x=>x[2]>0)
+            .map(m=>`
+
+                <tr>
+
+                    <td>${m[0]}</td>
+
+                    <td>${m[1]}</td>
+
+                    <td>${m[2]}</td>
+
+                </tr>
+
+            `).join("")}
+
+        </table>
+    `;
+
+}
+
+
+/* =====================================================
+   PDF HELPERS
+===================================================== */
+
+function escapePDF(s){
+
+    return String(s)
+        .replace(/\\/g,"\\\\")
+        .replace(/\(/g,"\\(")
+        .replace(/\)/g,"\\)");
+
+}
+
+
+function pdfText(
+    text,
+    x,
+    y,
+    size=11
+){
+
+    return `
+BT
+/F1 ${size} Tf
+${x} ${y} Td
+(${escapePDF(text)}) Tj
+ET
+`;
+
+}
+
+
+function pdfRect(
+    x,
+    y,
+    w,
+    h,
+    fill=false
+){
+
+    return `
+
+${fill
+    ?"0.90 0.94 0.92 rg"
+    :"0.15 0.35 0.25 RG"}
+
+${x} ${y} ${w} ${h} re
+${fill?"f":"S"}
+
+`;
+
+}
+
+
+/* =====================================================
+   CREATE PDF
+===================================================== */
+
+function makePDF(){
+
+    buildQuote();
+
+    const W=595;
+    const H=842;
+
+    let c="";
+
+
+    c+=pdfText(
+        "PRIMEFIT ERP",
+        45,
+        800,
+        18
+    );
+
+
+    c+=pdfText(
+        "FURNITURE DESIGN QUOTATION",
+        45,
+        775,
+        13
+    );
+
+
+    c+=pdfText(
+        "Project: "+
+        (
+            projectName.value ||
+            "PrimeFit Furniture Project"
+        ),
+        45,
+        745,
+        11
+    );
+
+
+    c+=pdfText(
+        "Type: "+
+        projectType.value,
+        45,
+        728,
+        11
+    );
+
+
+    const d=new Date();
+
+    const u=new Date(d);
+
+    u.setDate(
+        u.getDate()+15
+    );
+
+
+    c+=pdfText(
+        "Quotation Date: "+
+        d.toLocaleDateString(),
+        45,
+        711,
+        10
+    );
+
+
+    c+=pdfText(
+        "Valid Until: "+
+        u.toLocaleDateString()+
+        " (15 days)",
+        45,
+        694,
+        10
+    );
+
+
+    c+=pdfText(
+        "3D DESIGN COMPONENTS",
+        45,
+        660,
+        13
+    );
+
+
+    let y=638;
+
+
+    objects.forEach((o,i)=>{
+
+        if(y<70)
+            y=800;
+
+
+        c+=pdfRect(
+            42,
+            y-5,
+            510,
+            23,
+            true
+        );
+
+
+        c+=pdfText(
+            `${i+1}. ${o.name}`,
+            50,
+            y+3,
+            10
+        );
+
+
+        c+=pdfText(
+            `${Math.round(o.w*2)} x ${Math.round(o.h*2)} mm`,
+            380,
+            y+3,
+            10
+        );
+
+
+        y-=30;
+
+    });
+
+
+    y-=5;
+
+
+    c+=pdfText(
+        "MATERIAL / BUILD NOTES",
+        45,
+        y,
+        13
+    );
+
+
+    y-=24;
+
+
+    const mats=
+        materials[projectType.value] ||
+        [];
+
+
+    mats
+    .filter(x=>x[2]>0)
+    .forEach(m=>{
+
+        c+=pdfText(
+            `${m[0]} - ${m[2]} ${m[1]}`,
+            50,
+            y,
+            10
+        );
+
+        y-=19;
+
+    });
+
+
+    c+=pdfText(
+        "Design view: 3D components shown in the PrimeFit designer.",
+        45,
+        45,
+        9
+    );
+
+
+    /*
+       SIMPLE VALID PDF
+    */
+
+    const objectsPDF=[];
+    const offsets=[];
+
+    const header=
+        "%PDF-1.4\n"+
+        "%\xE2\xE3\xCF\xD3\n";
+
+    let pos=header.length;
+
+
+    function add(obj){
+
+        offsets.push(pos);
+
+        objectsPDF.push(obj);
+
+        pos+=obj.length;
+
+    }
+
+
+    const stream=c;
+
+
+    add(`
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+`);
+
+
+    add(`
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+`);
+
+
+    add(`
+3 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 ${W} ${H}]
+/Resources
+<<
+/Font
+<<
+/F1 4 0 R
+>>
+>>
+/Contents 5 0 R
+>>
+endobj
+`);
+
+
+    add(`
+4 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+endobj
+`);
+
+
+    add(`
+5 0 obj
+<<
+/Length ${stream.length}
+>>
+stream
+${stream}
+endstream
+endobj
+`);
+
+
+    const xref=pos;
+
+
+    let out=
+        header+
+        objectsPDF.join("");
+
+
+    out+=
+        `xref
+0 ${objectsPDF.length+1}
+0000000000 65535 f 
+`;
+
+
+    offsets.forEach(n=>{
+
+        out+=
+            String(n)
+            .padStart(10,"0")+
+            " 00000 n \n";
+
+    });
+
+
+    out+=
+        `trailer
+<<
+/Size ${objectsPDF.length+1}
+/Root 1 0 R
+>>
+startxref
+${xref}
+%%EOF`;
+
+
+    lastPDFBlob=
+        new Blob(
+            [out],
+            {type:"application/pdf"}
+        );
+
+
+    if(lastPDFUrl)
+        URL.revokeObjectURL(lastPDFUrl);
+
+
+    lastPDFUrl=
+        URL.createObjectURL(
+            lastPDFBlob
+        );
+
+
+    const frame=
+        document.getElementById("pdfFrame");
+
+
+    frame.src=lastPDFUrl;
+
+    frame.style.display="block";
+
+
+    document.getElementById("openBtn")
+        .style.display="inline-block";
+
+    document.getElementById("saveBtn")
+        .style.display="inline-block";
+
+    document.getElementById("shareBtn")
+        .style.display="inline-block";
+
+
+    document.getElementById("openBtn")
+        .onclick=()=>{
+
+            frame.scrollIntoView({
+                behavior:"smooth"
+            });
+
+        };
+
+
+    document.getElementById("saveBtn")
+        .onclick=savePDF;
+
+
+    document.getElementById("shareBtn")
+        .onclick=sharePDF;
+
+
+    document.getElementById("pdfStatus")
+        .textContent=
+        "PDF created. Use Open PDF, Download/Save PDF, or Share PDF.";
+
+
+    frame.scrollIntoView({
+        behavior:"smooth"
+    });
+
+}
+
+
+/* =====================================================
+   SAVE PDF
+===================================================== */
+
+async function savePDF(){
+
+    if(!lastPDFBlob)
+        return;
+
+
+    const fileName=
+        "PrimeFit_Quotation_"+
+        Date.now()+
+        ".pdf";
+
+
+    try{
+
+        if(window.showSaveFilePicker){
+
+            const h=
+                await showSaveFilePicker({
+
+                    suggestedName:fileName,
+
+                    types:[
+                        {
+                            description:"PDF",
+
+                            accept:{
+                                "application/pdf":
+                                [".pdf"]
+                            }
+                        }
+                    ]
+
+                });
+
+
+            const w=
+                await h.createWritable();
+
+            await w.write(
+                lastPDFBlob
+            );
+
+            await w.close();
+
+            return;
+
+        }
+
+    }catch(e){}
+
+
+    const a=
+        document.createElement("a");
+
+    a.href=lastPDFUrl;
+
+    a.download=fileName;
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    a.remove();
+
+
+    document.getElementById("pdfStatus")
+        .textContent=
+        "If your phone does not download automatically, use the PDF viewer's Save/Download or Share button.";
+
+}
+
+
+/* =====================================================
+   SHARE PDF
+===================================================== */
+
+async function sharePDF(){
+
+    if(!lastPDFBlob)
+        return;
+
+
+    const file=
+        new File(
+            [lastPDFBlob],
+            "PrimeFit_Quotation.pdf",
+            {type:"application/pdf"}
+        );
+
+
+    if(
+        navigator.share &&
+        (
+            !navigator.canShare ||
+            navigator.canShare({
+                files:[file]
+            })
+        )
+    ){
+
+        try{
+
+            await navigator.share({
+                title:"PrimeFit Quotation",
+                files:[file]
+            });
+
+            return;
+
+        }catch(e){}
+
+    }
+
+
+    savePDF();
+
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+window.onload=loadLibrary;
+
+</script>
+
+</body>
+</html>
